@@ -25,7 +25,6 @@ body {
     align-items: center;
 }
 
-/* Background Container & Parallax */
 #parallax-container {
     position: fixed;
     top: -10%;
@@ -52,7 +51,6 @@ body {
     to { transform: scale(1.15); }
 }
 
-/* Scanlines & Grain Overlay */
 .overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -63,7 +61,6 @@ body {
     pointer-events: none;
 }
 
-/* Glass Content Card */
 .content-card {
     position: relative;
     background: var(--glass);
@@ -113,7 +110,6 @@ h1 {
     font-weight: 300;
 }
 
-/* Navigation Buttons */
 .nav-container {
     display: flex;
     justify-content: center;
@@ -154,7 +150,6 @@ h1 {
     box-shadow: 0 10px 20px rgba(255, 165, 0, 0.2);
 }
 
-/* Partikel */
 .particle {
     position: absolute;
     background: white;
@@ -170,7 +165,6 @@ h1 {
     100% { transform: translate(-10px, 10px); }
 }
 
-/* Info Bar di Bawah */
 .footer-info {
     position: fixed;
     bottom: 30px;
@@ -208,7 +202,7 @@ h1 {
         <a href="hal3.html" class="btn-nav">
             <i class="fas fa-feather-alt"></i> STORIES
         </a>
-        <a href="scrap tycoon.html" class="btn-nav btn-arcade">
+        <a href="scrap_tycoon.html" class="btn-nav btn-arcade">
             <i class="fas fa-gamepad"></i> ARCADE
         </a>
     </div>
@@ -217,19 +211,15 @@ h1 {
 <div class="footer-info">EST. 2026 • VERSION 1.0</div>
 
 <script>
-    // Parallax & Spotlight Effect
     const container = document.getElementById('parallax-container');
     document.addEventListener('mousemove', (e) => {
         const x = (window.innerWidth / 2 - e.pageX) / 50;
         const y = (window.innerHeight / 2 - e.pageY) / 50;
         container.style.transform = `translate(${x}px, ${y}px)`;
-        
-        // Update kursor spotlight
         document.body.style.setProperty('--x', e.clientX + 'px');
         document.body.style.setProperty('--y', e.clientY + 'px');
     });
 
-    // Generate Particles
     const pContainer = document.getElementById('particles-js');
     for (let i = 0; i < 40; i++) {
         const p = document.createElement('div');
@@ -239,10 +229,8 @@ h1 {
         p.style.height = size + 'px';
         p.style.top = Math.random() * 100 + '%';
         p.style.left = Math.random() * 100 + '%';
-        
         p.style.animation = `floatAround ${10 + Math.random() * 10}s infinite alternate ease-in-out`;
         p.style.animationDelay = Math.random() * 5 + 's';
-        
         pContainer.appendChild(p);
     }
 </script>
