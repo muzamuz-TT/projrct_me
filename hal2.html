@@ -23,7 +23,6 @@ body {
     overflow-x: hidden;
 }
 
-/* Background Container */
 #parallax-container {
     position: fixed;
     top: -10%;
@@ -56,7 +55,6 @@ body {
     pointer-events: none;
 }
 
-/* Main Layout */
 .main-wrapper {
     display: flex;
     flex-direction: column;
@@ -66,7 +64,6 @@ body {
     box-sizing: border-box;
 }
 
-/* Glass Card */
 .content-card {
     background: var(--glass);
     backdrop-filter: blur(25px);
@@ -74,7 +71,7 @@ body {
     border: 1px solid var(--glass-border);
     border-radius: 30px;
     padding: 40px;
-    width: 100%;
+    width: 90%;
     max-width: 800px;
     text-align: center;
     box-shadow: 0 25px 50px rgba(0,0,0,0.5);
@@ -89,7 +86,6 @@ h1 {
 
 .intro-text { opacity: 0.7; margin-bottom: 30px; font-weight: 300; }
 
-/* Buttons */
 .nav-group { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
 
 .btn {
@@ -113,7 +109,6 @@ h1 {
 .btn-danger { color: #ff5f5f; border-color: rgba(255, 95, 95, 0.3); }
 .btn-danger:hover { background: #ff5f5f; color: white; }
 
-/* Library Grid */
 .library-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -136,7 +131,6 @@ h1 {
 .book-item h3 { margin: 0 0 10px 0; font-size: 1.1em; }
 .book-item p { font-size: 0.8em; opacity: 0.6; height: 3em; overflow: hidden; }
 
-/* Modals */
 .modal {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
@@ -169,10 +163,9 @@ input, textarea {
     color: white;
     margin-bottom: 20px;
     box-sizing: border-box;
-    font-size: 16px; /* Mencegah auto-zoom di mobile */
+    font-size: 16px;
 }
 
-/* Chapter List */
 .chapter-item {
     display: flex;
     justify-content: space-between;
@@ -186,20 +179,19 @@ input, textarea {
 }
 .chapter-item:hover { border-color: rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); }
 
-/* Reader Styles */
 #read-content {
     line-height: 1.8;
     font-size: 1.1em;
     text-align: justify;
     color: rgba(255,255,255,0.9);
-    white-space: pre-wrap; /* Penting untuk mempertahankan baris baru */
+    white-space: pre-wrap;
 }
 
 .star { position: absolute; background: white; border-radius: 50%; z-index: -2; opacity: 0.5; }
 
+/* FIX TOMBOL KEMBALI DIARAHKAN KE index.html */
 .btn-back { position: fixed; top: 30px; left: 30px; z-index: 100; font-size: 11px; }
 
-/* Custom Scrollbar */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 10px; }
@@ -213,10 +205,10 @@ input, textarea {
 <div class="overlay"></div>
 <div id="particles-container"></div>
 
-<a href="hal1.html" class="btn btn-back">← KEMBALI</a>
+<!-- ARAH KE index.html -->
+<a href="index.html" class="btn btn-back">← KEMBALI</a>
 
 <div class="main-wrapper">
-    <!-- View: Library -->
     <div class="content-card" id="view-library">
         <h1>WORKSPACE</h1>
         <p class="intro-text">Kelola karya dan bab cerita Anda di sini.</p>
@@ -229,14 +221,11 @@ input, textarea {
 
         <div id="library-container" style="display: none;">
             <h2 style="letter-spacing: 3px; font-weight: 300; margin-bottom: 20px;">LIBRARY</h2>
-            <div class="library-grid" id="book-list">
-                <!-- Books generated here -->
-            </div>
+            <div class="library-grid" id="book-list"></div>
         </div>
     </div>
 </div>
 
-<!-- Modal: Create/Edit Book -->
 <div class="modal" id="modal-book">
     <div class="modal-content">
         <h2 id="book-modal-title">BUAT BUKU BARU</h2>
@@ -249,7 +238,6 @@ input, textarea {
     </div>
 </div>
 
-<!-- Modal: Book Options (Lihat/Edit) -->
 <div class="modal" id="modal-options">
     <div class="modal-content">
         <h2 id="opt-book-title">Judul Buku</h2>
@@ -263,19 +251,15 @@ input, textarea {
     </div>
 </div>
 
-<!-- Modal: Manage Chapters -->
 <div class="modal" id="modal-chapters">
     <div class="modal-content">
         <h2 id="chap-book-title">MANAGE BAB</h2>
         <button class="btn" style="margin-bottom: 20px; width: 100%; justify-content: center;" onclick="openChapterEditor()">+ TAMBAH BAB</button>
-        <div id="chapter-list">
-            <!-- Chapters generated here -->
-        </div>
+        <div id="chapter-list"></div>
         <button class="btn" style="margin-top: 20px; width: 100%; justify-content: center;" onclick="closeModal('modal-chapters')">SELESAI</button>
     </div>
 </div>
 
-<!-- Modal: Chapter Editor -->
 <div class="modal" id="modal-edit-chapter">
     <div class="modal-content">
         <h2>EDIT BAB</h2>
@@ -288,13 +272,10 @@ input, textarea {
     </div>
 </div>
 
-<!-- Modal: Reader Mode (BACA BAB) -->
 <div class="modal" id="modal-read">
     <div class="modal-content" style="max-width: 700px;">
         <h2 id="read-title" style="text-align: center; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; margin-bottom: 25px;">Judul Bab</h2>
-        <div id="read-content">
-            <!-- Konten bab akan muncul di sini -->
-        </div>
+        <div id="read-content"></div>
         <div class="nav-group" style="margin-top: 40px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
             <button class="btn" onclick="closeModal('modal-read')">SELESAI MEMBACA</button>
         </div>
@@ -302,19 +283,15 @@ input, textarea {
 </div>
 
 <script>
-    // State Management
     let books = JSON.parse(localStorage.getItem('rimuzz_books')) || [];
     let currentBookIndex = null;
     let currentChapterIndex = null;
 
-    // UI Functions
     function toggleLibrary() {
         const lib = document.getElementById('library-container');
         lib.style.display = lib.style.display === 'none' ? 'block' : 'none';
         if(lib.style.display === 'block') {
-            setTimeout(() => {
-                lib.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
+            setTimeout(() => { lib.scrollIntoView({ behavior: 'smooth' }); }, 100);
         }
         renderBooks();
     }
@@ -322,20 +299,16 @@ input, textarea {
     function openModal(id) { document.getElementById(id).style.display = 'flex'; }
     function closeModal(id) { document.getElementById(id).style.display = 'none'; }
 
-    // Book Logic
     function saveBook() {
         const title = document.getElementById('book-title').value;
         const desc = document.getElementById('book-desc').value;
-        
-        if(!title) return alert("Judul harus diisi!");
-
+        if(!title) return;
         if(currentBookIndex !== null && document.getElementById('book-modal-title').innerText.includes("EDIT")) {
             books[currentBookIndex].title = title;
             books[currentBookIndex].desc = desc;
         } else {
             books.push({ title, desc, chapters: [] });
         }
-
         updateStorage();
         closeModal('modal-book');
         renderBooks();
@@ -346,13 +319,13 @@ input, textarea {
         const list = document.getElementById('book-list');
         list.innerHTML = '';
         if(books.length === 0) {
-            list.innerHTML = '<p style="grid-column: 1/-1; opacity: 0.5; text-align: center;">Belum ada buku yang dibuat.</p>';
+            list.innerHTML = '<p style="grid-column: 1/-1; opacity: 0.5; text-align: center;">Belum ada buku.</p>';
             return;
         }
         books.forEach((book, index) => {
             const el = document.createElement('div');
             el.className = 'book-item';
-            el.innerHTML = `<h3>${book.title}</h3><p>${book.desc || 'Tidak ada deskripsi.'}</p>`;
+            el.innerHTML = `<h3>${book.title}</h3><p>${book.desc || '...'}</p>`;
             el.onclick = () => showOptions(index);
             list.appendChild(el);
         });
@@ -361,7 +334,7 @@ input, textarea {
     function showOptions(index) {
         currentBookIndex = index;
         document.getElementById('opt-book-title').innerText = books[index].title;
-        document.getElementById('opt-book-desc').innerText = books[index].desc || "Tidak ada deskripsi.";
+        document.getElementById('opt-book-desc').innerText = books[index].desc || "...";
         openModal('modal-options');
     }
 
@@ -374,7 +347,7 @@ input, textarea {
     }
 
     function deleteBook() {
-        if(confirm(`Hapus buku "${books[currentBookIndex].title}" secara permanen?`)) {
+        if(confirm("Hapus buku?")) {
             books.splice(currentBookIndex, 1);
             updateStorage();
             closeModal('modal-options');
@@ -382,7 +355,6 @@ input, textarea {
         }
     }
 
-    // Chapter Logic
     function viewBook() {
         closeModal('modal-options');
         document.getElementById('chap-book-title').innerText = books[currentBookIndex].title;
@@ -393,29 +365,24 @@ input, textarea {
     function renderChapters() {
         const list = document.getElementById('chapter-list');
         list.innerHTML = '';
-        if(books[currentBookIndex].chapters.length === 0) {
-            list.innerHTML = '<p style="opacity: 0.5; text-align: center; padding: 20px;">Belum ada bab.</p>';
-        }
         books[currentBookIndex].chapters.forEach((chap, index) => {
             const el = document.createElement('div');
             el.className = 'chapter-item';
             el.innerHTML = `
-                <span style="font-weight: 500;">${chap.title}</span>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn" style="padding:8px" title="Baca Bab" onclick="openReader(${index})"><i class="fas fa-eye"></i></button>
-                    <button class="btn" style="padding:8px" title="Edit Bab" onclick="openChapterEditor(${index})"><i class="fas fa-pen"></i></button>
-                    <button class="btn btn-danger" style="padding:8px" title="Hapus Bab" onclick="deleteChapter(${index})"><i class="fas fa-times"></i></button>
-                </div>
-            `;
+                <span>${chap.title}</span>
+                <div style="display:flex; gap:5px;">
+                    <button class="btn" style="padding:8px" onclick="openReader(${index})"><i class="fas fa-eye"></i></button>
+                    <button class="btn" style="padding:8px" onclick="openChapterEditor(${index})"><i class="fas fa-pen"></i></button>
+                    <button class="btn btn-danger" style="padding:8px" onclick="deleteChapter(${index})"><i class="fas fa-times"></i></button>
+                </div>`;
             list.appendChild(el);
         });
     }
 
-    // READER MODE LOGIC
     function openReader(index) {
         const chapter = books[currentBookIndex].chapters[index];
         document.getElementById('read-title').innerText = chapter.title;
-        document.getElementById('read-content').innerText = chapter.content || "Bab ini masih kosong.";
+        document.getElementById('read-content').innerText = chapter.content || "...";
         openModal('modal-read');
     }
 
@@ -434,21 +401,19 @@ input, textarea {
     function saveChapter() {
         const title = document.getElementById('chap-title').value;
         const content = document.getElementById('chap-content').value;
-        if(!title) return alert("Judul bab harus diisi!");
-
+        if(!title) return;
         if(currentChapterIndex !== null) {
             books[currentBookIndex].chapters[currentChapterIndex] = { title, content };
         } else {
             books[currentBookIndex].chapters.push({ title, content });
         }
-
         updateStorage();
         closeModal('modal-edit-chapter');
         renderChapters();
     }
 
     function deleteChapter(index) {
-        if(confirm("Hapus bab ini?")) {
+        if(confirm("Hapus bab?")) {
             books[currentBookIndex].chapters.splice(index, 1);
             updateStorage();
             renderChapters();
@@ -463,7 +428,6 @@ input, textarea {
         document.getElementById('book-modal-title').innerText = "BUAT BUKU BARU";
     }
 
-    // Visuals
     const container = document.getElementById('parallax-container');
     document.addEventListener('mousemove', (e) => {
         const x = (window.innerWidth / 2 - e.pageX) / 60;
@@ -472,7 +436,7 @@ input, textarea {
     });
 
     const pContainer = document.getElementById('particles-container');
-    for (let i = 0; i < 40; i++) {
+    for (let i = 0; i < 30; i++) {
         const star = document.createElement('div');
         star.className = 'star';
         const s = Math.random() * 2 + 1;
@@ -480,10 +444,8 @@ input, textarea {
         star.style.height = s + 'px';
         star.style.top = Math.random() * 100 + '%';
         star.style.left = Math.random() * 100 + '%';
-        star.style.opacity = Math.random() * 0.5 + 0.2;
         pContainer.appendChild(star);
     }
 </script>
-
 </body>
 </html>
