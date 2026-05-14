@@ -8,8 +8,8 @@
 
 <style>
 :root {
-    --glass: rgba(0, 0, 0, 0.5);
-    --glass-border: rgba(255, 255, 255, 0.15);
+    --glass: rgba(0, 0, 0, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
     --accent: #fff;
 }
 
@@ -43,16 +43,14 @@ body {
     background-image: url('https://lh3.googleusercontent.com/u/0/d/1jgnps4Jqq24CBpMHeJeV2zICofWdw2g3');
     background-size: cover;
     background-position: center;
-    /* Diperbaiki: Kecerahan ditingkatkan dan blur dikurangi agar gambar lebih terlihat */
-    filter: brightness(0.6) blur(1px);
+    filter: brightness(0.6);
     transform: scale(1.1);
 }
 
 .overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    /* Gradien dibuat lebih halus agar tidak menutupi gambar latar */
-    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.7));
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
     z-index: -1;
     pointer-events: none;
 }
@@ -95,9 +93,9 @@ body {
     margin: 120px 20px;
     padding: 60px 50px;
     background: var(--glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-radius: 30px;
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
     border: 1px solid var(--glass-border);
     line-height: 2;
     box-shadow: 0 40px 100px rgba(0,0,0,0.8);
@@ -119,17 +117,14 @@ body {
     border-left: 5px solid white;
     padding-left: 25px;
     line-height: 1.2;
-    background: linear-gradient(to right, #fff, #bbb);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .story-text {
     font-size: 1.05em;
-    opacity: 0.95;
+    opacity: 0.9;
     text-align: justify;
     font-weight: 300;
-    color: #eee;
+    color: #fff;
     letter-spacing: 0.5px;
 }
 
@@ -140,17 +135,14 @@ body {
     display: block;
     margin-top: 5px;
     line-height: 1.4;
-    padding: 5px 10px;
-    background: rgba(255,255,255,0.05);
-    border-radius: 5px;
 }
 
 .stars {
     text-align: center;
-    margin: 60px 0;
+    margin: 50px 0;
     font-size: 1.2em;
-    letter-spacing: 20px;
-    opacity: 0.2;
+    letter-spacing: 15px;
+    opacity: 0.3;
 }
 
 .link-section {
@@ -176,9 +168,9 @@ body {
     font-size: 10px;
     letter-spacing: 4px;
     padding: 18px 35px;
-    background: rgba(255,255,255,0.05);
+    background: rgba(255,255,255,0.1);
     border: 1px solid var(--glass-border);
-    border-radius: 10px;
+    border-radius: 5px;
     transition: 0.4s;
     text-transform: uppercase;
 }
@@ -187,7 +179,7 @@ body {
     background: white;
     color: black;
     transform: translateY(-3px);
-    box-shadow: 0 10px 30px rgba(255,255,255,0.1);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
 }
 
 /* Floating Particles */
@@ -198,11 +190,6 @@ body {
     pointer-events: none;
     z-index: -2;
     opacity: 0.15;
-}
-
-@keyframes drift {
-    from { transform: translateY(0) rotate(0deg); }
-    to { transform: translateY(-100vh) rotate(360deg); }
 }
 
 /* Scrollbar Custom */
@@ -220,6 +207,7 @@ body {
     <div class="overlay"></div>
     <div id="particles-js"></div>
 
+    <!-- Tombol Navigasi Kembali ke Halaman 1 -->
     <div class="nav-back">
         <a href="hal1.html" class="btn-back">
             <i class="fas fa-arrow-left"></i> KEMBALI
@@ -261,7 +249,7 @@ body {
             Di parkiran bawah yang hawanya pengap dan berbau semen, sepedaku sudah menunggu di pojok, berdebu tipis. Pas mau buka gembok, ternyata besi penguncinya agak macet saking jarangnya dipakai belakangan ini. Dan itu merepotkan, Aku jadi harus sedikit memaksanya, menarik-narik rantai besinya sampai tanganku terasa dingin dan agak kotor terkena karat besi. <br><br>
             
             “Ayo dong, jangan sekarang,” gerutuku sambil menarik gembok itu sekuat tenaga sampai urat tanganku menegang. <br>
-            Klik. Akhirnya terbuka juga. Aku segera menyeka telapak tanganku ke celana, menaiki sepeda, and mulai mengayuh keluar dari area apartemen menuju jalanan besar yang mulai padat. <br><br>
+            Klik. Akhirnya terbuka juga. Aku segera menyeka telapak tanganku ke celana, menaiki sepeda, dan mulai mengayuh keluar dari area apartemen menuju jalanan besar yang mulai padat. <br><br>
             
             Udara pagi ini sebenarnya lumayan segar, tapi pancaran sinar matahari sudah mulai terasa menyengat di kulit tengkukku. Meskipun panas, angin yang menerpa wajah saat aku mengayuh sepeda lumayan membantuku lupa sejenak soal pembicaraan di telepon tadi. Aku melirik beberapa toko yang baru buka; suara pintu gulung yang ditarik ke atas terdengar bersahut-sahutan. Ada bau kopi yang sangat kuat dari salah satu kedai kecil di pojok jalan, bercampur dengan aroma aspal yang baru saja disiram air oleh pemilik toko di sebelahnya. <br><br>
             
@@ -285,7 +273,7 @@ body {
         <div class="stars">***</div>
 
         <div class="link-section">
-            <p>Info: Cerita dalam tahap pengembangan intensif ^.^</p>
+            <p>Info: Cerita belum selesai dibuat, wajarin ya kalau berubah terus ^.^</p>
             <p>Eksplorasi Narasi Lebih Jauh</p>
             <a href="https://docs.google.com/document/d/1KB4QUf55EOmRT1m1HhiNulSitKtzEpBl_S8hAog9MRM/edit?usp=sharing" target="_blank" class="link-full">
                 BACA VERSI LENGKAP <i class="fas fa-external-link-alt"></i>
@@ -294,35 +282,26 @@ body {
     </div>
 
     <script>
-        // Parallax Effect
+        // Efek Parallax
         const container = document.getElementById('parallax-container');
         document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.pageX) / 60;
-            const y = (window.innerHeight / 2 - e.pageY) / 60;
+            const x = (window.innerWidth / 2 - e.pageX) / 75;
+            const y = (window.innerHeight / 2 - e.pageY) / 75;
             container.style.transform = `translate(${x}px, ${y}px)`;
         });
 
-        // Floating Snow/Particles Effect
+        // Partikel Latar Belakang
         const pContainer = document.getElementById('particles-js');
-        function createParticle() {
+        for (let i = 0; i < 25; i++) {
             const p = document.createElement('div');
             p.className = 'particle';
-            const size = Math.random() * 3 + 1;
+            const size = Math.random() * 2 + 0.5;
             p.style.width = size + 'px';
             p.style.height = size + 'px';
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = '100vh';
-            p.style.opacity = Math.random() * 0.5;
-            
-            const duration = 10 + Math.random() * 10;
-            p.style.animation = `drift ${duration}s linear infinite`;
-            p.style.animationDelay = `-${Math.random() * duration}s`;
-            
+            p.style.top = Math.random() * 100 + 'vh';
+            p.style.opacity = Math.random() * 0.2;
             pContainer.appendChild(p);
-        }
-
-        for (let i = 0; i < 50; i++) {
-            createParticle();
         }
     </script>
 
