@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rimuzz - Stories Content</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+<style>
+:root {
+    --glass: rgba(0, 0, 0, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --accent: #fff;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    min-height: 100vh;
+    background-color: #000;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-x: hidden;
+}
+
+/* Background & Parallax */
+#parallax-container {
+    position: fixed;
+    top: -10%;
+    left: -10%;
+    width: 120%;
+    height: 120%;
+    z-index: -3;
+    transition: transform 0.2s cubic-bezier(0.1, 0.5, 0.2, 1);
+}
+
+#bg-image {
+    width: 100%;
+    height: 100%;
+    background-image: url('https://lh3.googleusercontent.com/u/0/d/1jgnps4Jqq24CBpMHeJeV2zICofWdw2g3');
+    background-size: cover;
+    background-position: center;
+    filter: brightness(0.6);
+    transform: scale(1.1);
+}
+
+.overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
+    z-index: -1;
+    pointer-events: none;
+}
+
+/* Navigation Back */
+.nav-back {
+    position: fixed;
+    top: 30px;
+    left: 30px;
+    z-index: 100;
+}
+
+.btn-back {
+    text-decoration: none;
+    color: white;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 12px 25px;
+    border-radius: 50px;
+    font-size: 11px;
+    letter-spacing: 2px;
+    font-weight: 600;
+    border: 1px solid var(--glass-border);
+    transition: 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-back:hover {
+    background: white;
+    color: black;
+    transform: translateX(-5px);
+}
+
+/* Story Content Card */
+.story-container {
+    max-width: 800px;
+    margin: 120px 20px;
+    padding: 60px 50px;
+    background: var(--glass);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    line-height: 2;
+    box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+    animation: fadeInUp 1s forwards ease-out;
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.story-title {
+    font-size: 2.2em;
+    font-weight: 900;
+    margin-bottom: 40px;
+    text-align: left;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    border-left: 5px solid white;
+    padding-left: 25px;
+    line-height: 1.2;
+}
+
+.story-text {
+    font-size: 1.05em;
+    opacity: 0.9;
+    text-align: justify;
+    font-weight: 300;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.footnote {
+    font-size: 0.85em;
+    color: rgba(255,255,255,0.6);
+    font-style: italic;
+    display: block;
+    margin-top: 5px;
+    line-height: 1.4;
+}
+
+.stars {
+    text-align: center;
+    margin: 50px 0;
+    font-size: 1.2em;
+    letter-spacing: 15px;
+    opacity: 0.3;
+}
+
+.link-section {
+    text-align: center;
+    padding-top: 40px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.link-section p {
+    font-size: 0.85em;
+    letter-spacing: 2px;
+    opacity: 0.6;
+    margin-bottom: 25px;
+}
+
+.link-full {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 10px;
+    letter-spacing: 4px;
+    padding: 18px 35px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid var(--glass-border);
+    border-radius: 5px;
+    transition: 0.4s;
+    text-transform: uppercase;
+}
+
+.link-full:hover {
+    background: white;
+    color: black;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+}
+
+/* Floating Particles */
+.particle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: -2;
+    opacity: 0.15;
+}
+
+/* Scrollbar Custom */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: rgba(0,0,0,0.2); }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 10px; }
+</style>
+</head>
+
+<body>
+
+    <div id="parallax-container">
+        <div id="bg-image"></div>
+    </div>
+    <div class="overlay"></div>
+    <div id="particles-js"></div>
+
+    <div class="nav-back">
+        <a href="hal1.html" class="btn-back">
+            <i class="fas fa-arrow-left"></i> KEMBALI
+        </a>
+    </div>
+
+    <div class="story-container">
+        <h1 class="story-title">The Secret Behind Her Smile.</h1>
+        
+        <div class="story-text">
+            Nama Ayah yang muncul di layar ponsel membuat dadaku menegang. Refleks aku mengangkat telepon itu dengan tangan yang sedikit gemetar. “Kenapa baru diangkat?” <br>
+            Nada yang selalu terdengar seolah aku sudah melakukan kesalahan, bahkan sebelum aku sempat menjelaskan apa pun terdengar. Sebenarnya aku memang sengaja tak mengangkatnya untuk fokus belajar, tapi… ini ayahku. Ayah adalah satu-satunya orang yang tidak boleh kuabaikan. “Aku—” <br><br>
+            
+            “Dengar. Hari ini hari pertamamu di sekolah baru,” potongnya cepat tanpa memberiku celah untuk membela diri. “Jangan bikin masalah. Fokus aja belajar, Jangan main-main. Nilai kamu gak boleh turun. Kamu ngerti?” <br>
+            Aku menyandarkan tubuhku ke kursi, memejamkan mata sesaat. “Iya.” <br><br>
+            
+            “eodi issneunya?¹” tanyanya lagi sebelum aku sempat bicara. <br>
+            <span class="footnote">¹ eodi issneunya? (Bahasa Korea): Ada di mana? / Kamu di mana?</span> <br>
+            
+            “Masih di apartemen, Yah. Sebentar lagi berangkat.” <br>
+            “Ingat pesan Ayah. Just focus on your study, Rain. Don't let me down²,” ucapnya dingin. <br>
+            <span class="footnote">² Just focus on your study, Rain. Don't let me down (Bahasa Inggris): Fokus saja pada belajarmu, Rain. Jangan mengecewakanku.</span> <br>
+            
+            “Iya, ngerti!.” <br>
+            “Geurae³. Itu aja?.” tanyaku malas, namun dengan nada menekan dan berharap mengatakan ‘semangat’ atau hal yang bisa menghibur, tapi tentu itu tak mungkin berhasil <br>
+            <span class="footnote">³ Geurae (Bahasa Korea): Ya / Baiklah / Begitu ya.</span> <br><br>
+            
+            Tidak ada jawaban dalam satu detik membuatku langsung menutup telepon, menekan tombol merah itu sebelum kata apa pun bisa keluar dari bibirnya. Telepon pun akhirnya terputus. Perasaan campur aduk mengisi dadaku—lega karena interogasi singkat itu berakhir, juga merasa bersalah dan sesak di saat yang bersamaan. <br><br>
+            
+            Aku bersandar lama di kursi, menatap jendela yang hanya menampilkan langit kelabu Seoul⁴ yang seolah ikut meredup. Di meja belajar, sebuah buku tergeletak dengan sampulnya setengah terlipat. Judulnya ‘Newton III’ tentang seorang pahlawan yang mencari jati dirinya setelah kehilangan segalanya. Buku itu belum selesai kubaca, padahal aku sudah membawanya sejak dari pindahan kemarin. <br>
+            <span class="footnote">⁴ Seoul (Ibu kota Korea Selatan)</span> <br><br>
+            
+            Aku menatap layar ponsel yang sudah gelap, lalu meletakkannya dengan suara tak pelan di samping buku. Ruangan kembali sunyi, hanya ada suara dengung AC yang entah kenapa sekarang terdengar makin berisik di telingaku. Aku bersandar lama di kursi, menatap langit kelabu dari balik jendela yang mulai berembun tipis. Apartemen ini kata Ayah adalah fasilitas yang memadai, tapi jujur saja, bagiku ini cuma tempat luas yang nggak ada nyawanya. Rasanya lebih mirip kamar hotel daripada sebuah rumah yang hangat. <br><br>
+            
+            Aku beranjak dari kursi, lalu berdiri di depan cermin sebentar. Aku merapikan kerah seragam baruku yang masih terasa kaku dan bau kain baru yang menyengat. Warnanya berbeda sekali dari sekolah dulu, bikin aku merasa kayak orang asing di tubuh sendiri. Aku sempat menatap nametag-ku yang tersemat rapi. “Duhh... Kenapa seragam ini terasa berat sekali?” gumamku pelan. <br><br>
+            
+            Oke, Rain. Fokus saja seperti kata Ayah, bisikku pelan ke arah cermin, meskipun bayanganku di sana kelihatan nggak yakin sama sekali. Aku mengambil ransel yang beratnya lumayan menyiksa bahuku, memastikan tidak ada buku yang tertinggal di atas meja, lalu melangkah keluar dan mengunci pintu apartemen rapat-rapat. <br><br>
+            
+            Di parkiran bawah yang hawanya pengap dan berbau semen, sepedaku sudah menunggu di pojok, berdebu tipis. Pas mau buka gembok, ternyata besi penguncinya agak macet saking jarangnya dipakai belakangan ini. Dan itu merepotkan, Aku jadi harus sedikit memaksanya, menarik-narik rantai besinya sampai tanganku terasa dingin dan agak kotor terkena karat besi. <br><br>
+            
+            “Ayo dong, jangan sekarang,” gerutuku sambil menarik gembok itu sekuat tenaga sampai urat tanganku menegang. <br>
+            Klik. Akhirnya terbuka juga. Aku segera menyeka telapak tanganku ke celana, menaiki sepeda, dan mulai mengayuh keluar dari area apartemen menuju jalanan besar yang mulai padat. <br><br>
+            
+            Udara pagi ini sebenarnya lumayan segar, tapi pancaran sinar matahari sudah mulai terasa menyengat di kulit tengkukku. Meskipun panas, angin yang menerpa wajah saat aku mengayuh sepeda lumayan membantuku lupa sejenak soal pembicaraan di telepon tadi. Aku melirik beberapa toko yang baru buka; suara pintu gulung yang ditarik ke atas terdengar bersahut-sahutan. Ada bau kopi yang sangat kuat dari salah satu kedai kecil di pojok jalan, bercampur dengan aroma aspal yang baru saja disiram air oleh pemilik toko di sebelahnya. <br><br>
+            
+            Aku melihat orang-orang yang sibuk dengan urusan mereka masing-masing. Berlalu lalang sembari melihat gawai, Bapak-bapak yang lari-lari mengejar bus sambil memegang tas kantornya dengan panik, ada juga ibu-ibu yang sibuk menata dagangan buah di depan tokonya. Melihat kesibukan yang sangat manusiawi itu, aku refleks menarik sudut bibirku sedikit, mencoba mencari kekuatan dari sana. <br><br>
+            
+            Hari yang baik untuk tersenyum, pikirku, meski rasanya bongkahan batu di hati ini masih terasa sangat berat. <br><br>
+            
+            Pikiranku melayang tanpa arah sampai mataku menangkap sesosok kecil di depan toko roti persimpangan jalan. Spontan Aku mengerem sepeda sampai ban karetnya berdecit keras di atas aspal karena melihat seorang anak kecil yang menangis sampai bahunya naik turun dengan hebat. Wajahnya merah, tangannya mengepal kuat di samping seragam sekolah dasarnya yang kelihatan agak kebesaran. Sepertinya dia baru saja menjatuhkan sesuatu yang berharga, atau mungkin dia tersesat di tengah keramaian ini. <br><br>
+            
+            Di depannya, ada seorang pria yang sedang berjongkok, menyamakan tingginya dengan anak itu. Aku memperlambat sepeda sampai hampir berhenti total, pura-pura mengecek rantai sepedaku padahal mataku terus memperhatikan mereka dengan rasa ingin tahu. Walaupun tidak mendengar apa yang mereka bicarakan karena bisingnya suara kendaraan, entah kenapa aku bisa paham situasinya. Pria itu berdiri dan mencondongkan badan sebentar, menunggu anak itu agak tenang dan berhenti sesenggukan. <br><br>
+            
+            Mukanya tak terlihat jelas dari sini karena tertutup bayangan topi hitam yang ia pakai, tapi dari jauh pria itu terlihat dingin sekali. Aura di sekitarnya terasa kaku. Dia merogoh tas hitamnya yang tampak penuh, mencari sesuatu di antara tumpukan file-file yang tersusun rapi, lalu mengeluarkan sebatang cokelat dan memberikannya tanpa banyak kata, hampir menyerupai gerakan robot. <br><br>
+            
+            Anak itu seketika berhenti menangis. Seperti hujan yang reda dengan tiba-tiba. Dia menerima cokelat itu dengan ragu-ragu, jemarinya yang mungil gemetar saat membuka bungkus peraknya, Anak itu pun tersenyum kecil sebelum akhirnya menggigit cokelat itu. <br><br>
+            
+            Aku sempat terpaku melihatnya. Ada perasaan hangat yang tiba-tiba muncul di dadaku melihat interaksi singkat itu. Rasanya ingin turun dan mendekat, sekadar memastikan anak itu baik-baik saja, tapi suara Ayah tiba-tiba muncul lagi di kepalaku, terdengar tajam dan menuntut, memenuhi rongga telingaku. <br><br>
+            
+            “Ukh... fokus Rain, fokus.”
+        </div>
+
+        <div class="stars">***</div>
+
+        <div class="link-section">
+            <p>Info: Cerita belum selesai dibuat, wajarin ya kalau berubah terus ^.^</p>
+            <p>Eksplorasi Narasi Lebih Jauh</p>
+            <a href="https://docs.google.com/document/d/1KB4QUf55EOmRT1m1HhiNulSitKtzEpBl_S8hAog9MRM/edit?usp=sharing" target="_blank" class="link-full">
+                BACA VERSI LENGKAP <i class="fas fa-external-link-alt"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Parallax Effect
+        const container = document.getElementById('parallax-container');
+        document.addEventListener('mousemove', (e) => {
+            const x = (window.innerWidth / 2 - e.pageX) / 75;
+            const y = (window.innerHeight / 2 - e.pageY) / 75;
+            container.style.transform = `translate(${x}px, ${y}px)`;
+        });
+
+        // Background Particles
+        const pContainer = document.getElementById('particles-js');
+        for (let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            const size = Math.random() * 2 + 0.5;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.top = Math.random() * 100 + 'vh';
+            p.style.opacity = Math.random() * 0.2;
+            pContainer.appendChild(p);
+        }
+    </script>
+
+</body>
+</html>
