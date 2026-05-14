@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Scrap Tycoon: Absolute Empire</title>
+    <style>
+        :root {
+            --bg: #090b10; --panel: #131722; --border: #232936;
+            --accent: #ff7300; --accent-hover: #ff913d;
+            --money: #2ecc71; --energy: #3498db; --thirst: #00d2ff; 
+            --xp: #9b59b6; --text: #e2e8f0; --danger: #e74c3c;
+            --warning: #f1c40f;
+        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; user-select: none; }
+        body { background: var(--bg); color: var(--text); height: 100vh; overflow: hidden; display: flex; flex-direction: row; }
+        
+        @media (max-width: 768px) { body { flex-direction: column; } }
+
+        /* --- SIDEBAR --- */
+        .sidebar { width: 280px; background: var(--panel); border-right: 1px solid var(--border); display: flex; flex-direction: column; padding: 20px; z-index: 100; overflow-y: auto; transition: 0.3s; }
+        @media (max-width: 768px) { .sidebar { width: 100%; height: 35vh; border-right: none; border-bottom: 1px solid var(--border); padding: 10px; } }
+        
+        .brand { color: var(--accent); font-size: 1.2rem; font-weight: 800; text-align: center; margin-bottom: 20px; letter-spacing: 1px; text-transform: uppercase; text-shadow: 0 0 10px rgba(255,115,0,0.3); }
+        
+        .stat-box { background: rgba(0,0,0,0.3); padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--border); transition: 0.2s; }
+        .stat-box:hover { background: rgba(255,255,255,0.03); transform: translateX(2px); }
+        .stat-label { font-size: 0.7rem; color: #8fa3b0; text-transform: uppercase; font-weight: bold; letter-spacing: 0.5px; display: flex; justify-content: space-between; }
+        .stat-val { font-size: 1.2rem; font-weight: bold; display: block; margin-top: 4px; }
+        
+        .bar-container { width: 100%; height: 6px; background: #1a1f2e; border-radius: 3px; margin-top: 8px; overflow: hidden; }
+        .bar-fill { height: 100%; width: 0%; transition: width 0.3s ease, background-color 0.3s; background: var(--accent); }
+        
+        .critical { animation: pulseRed 1.5s infinite; color: var(--danger) !important; }
+        @keyframes pulseRed { 0% { opacity: 1; } 50% { opacity: 0.5; color: #ff0000; } 100% { opacity: 1; } }
+
+        /* --- MAIN VIEW --- */
+        .main-view { flex: 1; display: flex; flex-direction: column; position: relative; overflow: hidden; background: radial-gradient(circle at top, #1a2030 0%, var(--bg) 80%); }
+        
+        .header-top { height: 60px; background: rgba(19, 23, 34, 0.8); border-bottom: 1px solid var(--border); display: flex; align-items: center; padding: 0 20px; justify-content: space-between; backdrop-filter: blur(5px); z-index: 10; }
+        .weather-badge { background: rgba(255,255,255,0.1); padding: 5px 10px; border-radius: 20px; font-size: 0.8rem; font-weight: bold; display: flex; gap: 5px; align-items: center;}
+        
+        .screen { flex: 1; overflow-y: auto; padding: 30px; display: none; animation: fadeIn 0.3s ease; }
+        .screen.active { display: flex; flex-direction: column; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- NAVIGATION CARDS --- */
+        .nav-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 12px; margin-top: 20px; }
+        .nav-card { background: linear-gradient(145deg, #1c2230, #131722); border: 1px solid var(--border); padding: 15px 10px; border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+        .nav-card:hover:not(.locked) { border-color: var(--accent); transform: translateY(-5px); box-shadow: 0 8px 20px rgba(255,115,0,0.2); background: #1f2636; }
+        .nav-card i { font-size: 2rem; margin-bottom: 8px; display: block; font-style: normal; }
+        .nav-card span { font-size: 0.75rem; font-weight: bold; color: #a0aec0; }
+        
+        .nav-card.locked { opacity: 0.4; filter: grayscale(1); cursor: not-allowed; box-shadow: none; }
+        .lock-tag { position: absolute; top: -8px; right: -8px; font-size: 0.6rem; background: var(--danger); color: white; padding: 4px 8px; border-radius: 10px; font-weight: bold; box-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+
+        /* --- WORK BUTTON --- */
+        .work-area { text-align: center; margin: auto; display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        #scrap-btn { width: 200px; height: 200px; border-radius: 50%; border: 12px solid #1a2030; background: radial-gradient(circle, #3a4760 0%, #131722 100%); font-size: 5rem; cursor: pointer; position: relative; overflow: hidden; margin: 30px 0; outline: none; transition: transform 0.1s; box-shadow: 0 15px 35px rgba(0,0,0,0.5), inset 0 0 20px rgba(0,0,0,0.8); display: flex; align-items: center; justify-content: center; }
+        #scrap-btn:active:not(:disabled) { transform: scale(0.92); box-shadow: 0 5px 15px rgba(0,0,0,0.5), inset 0 0 30px rgba(0,0,0,0.9); }
+        .cooldown-overlay { position: absolute; bottom: 0; left: 0; width: 100%; height: 0%; background: rgba(255, 115, 0, 0.4); z-index: 1; backdrop-filter: blur(2px); }
+
+        /* --- UI COMPONENTS --- */
+        h2.section-title { color: white; font-size: 1.5rem; margin-bottom: 20px; border-bottom: 2px solid var(--border); padding-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+        
+        .card { background: rgba(20, 24, 34, 0.7); border: 1px solid var(--border); padding: 18px; margin-bottom: 12px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; backdrop-filter: blur(4px); }
+        .card:hover { border-color: #3a4760; background: rgba(30, 36, 50, 0.8); }
+        .card .info h4 { color: white; font-size: 1.1rem; margin-bottom: 4px; }
+        .card .info p { color: #8fa3b0; font-size: 0.8rem; }
+        
+        .btn { background: var(--money); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 0.85rem; transition: all 0.2s; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3); }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(46, 204, 113, 0.5); filter: brightness(1.1); }
+        .btn:active:not(:disabled) { transform: translateY(1px); }
+        .btn:disabled { background: #2c3e50; color: #7f8c8d; box-shadow: none; cursor: not-allowed; opacity: 0.7; }
+        .btn-danger { background: var(--danger); box-shadow: 0 4px 10px rgba(231, 76, 60, 0.3); }
+        .btn-danger:hover:not(:disabled) { box-shadow: 0 6px 15px rgba(231, 76, 60, 0.5); }
+        .btn-accent { background: var(--accent); box-shadow: 0 4px 10px rgba(255, 115, 0, 0.3); }
+        .btn-accent:hover:not(:disabled) { box-shadow: 0 6px 15px rgba(255, 115, 0, 0.5); }
+
+        /* --- FOOTER TABS --- */
+        .footer { height: 65px; background: #0f1218; border-top: 1px solid var(--border); display: flex; z-index: 10; }
+        .tab { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; font-size: 0.65rem; cursor: pointer; color: #64748b; font-weight: bold; transition: 0.2s; border-top: 3px solid transparent; }
+        .tab i { font-size: 1.2rem; margin-bottom: 3px; font-style: normal; }
+        .tab:hover { color: white; background: rgba(255,255,255,0.02); }
+        .tab.active { color: var(--accent); border-top-color: var(--accent); background: linear-gradient(to bottom, rgba(255,115,0,0.1), transparent); }
+
+        /* --- OVERLAYS --- */
+        .overlay { position: fixed; top:0; left:0; width:100%; height:100%; background:rgba(5, 7, 10, 0.95); z-index:10000; display:none; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding: 20px; backdrop-filter: blur(10px); }
+        .modal { background: #131722; border: 1px solid var(--accent); padding: 40px; border-radius: 20px; max-width: 400px; width: 100%; box-shadow: 0 20px 50px rgba(0,0,0,0.8), 0 0 30px rgba(255,115,0,0.2); }
+        .modal h1 { color: white; margin-bottom: 15px; font-size: 2rem; }
+        .modal p { color: #a0aec0; margin-bottom: 25px; line-height: 1.5; }
+
+        /* --- MALING (THIEF) --- */
+        #maling { position: fixed; width: 80px; height: 80px; background: radial-gradient(circle, #ff4757, #c0392b); border-radius: 50%; z-index: 9000; cursor: pointer; border: 3px dashed white; display: none; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.8rem; box-shadow: 0 0 30px #ff4757; animation: malingMove 2s infinite alternate ease-in-out; text-align: center; line-height: 1.2; }
+        @keyframes malingMove { 0% { transform: scale(1) rotate(-10deg); } 100% { transform: scale(1.1) rotate(10deg); } }
+
+        /* --- FLOATING TEXT --- */
+        .floating { position: fixed; pointer-events: none; animation: floatUp 1s forwards cubic-bezier(0.215, 0.610, 0.355, 1); font-weight: 900; z-index: 11000; font-size: 1.5rem; text-shadow: 0 2px 5px rgba(0,0,0,0.8); }
+        @keyframes floatUp { 0% { transform: translateY(0) scale(0.5); opacity: 0; } 20% { transform: translateY(-20px) scale(1.2); opacity: 1; } 100% { transform: translateY(-100px) scale(1); opacity: 0; } }
+
+        /* --- DIARY --- */
+        #diary-log { background: #0a0c11; border: 1px solid #1f2636; padding: 15px; border-radius: 10px; font-size: 0.75rem; height: 350px; overflow-y: auto; font-family: 'Courier New', Courier, monospace; color: #a0aec0; line-height: 1.6; }
+        .log-entry { padding: 5px 0; border-bottom: 1px dashed #1f2636; }
+        .log-day { color: var(--accent); font-weight: bold; }
+
+    </style>
+</head>
+<body>
+
+    <!-- THIEF EVENT -->
+    <div id="maling" onclick="hajarMaling()">MALING!<br>TAP!<br><span id="maling-hp" style="font-size:1.2rem;">5</span></div>
+
+    <!-- START SCREEN -->
+    <div id="start-screen" class="overlay" style="display:flex; z-index: 99999; background: var(--bg);">
+        <div class="modal" style="text-align: center; padding: 50px 30px;">
+            <h1 style="color: var(--accent); font-size: 2.5rem; margin-bottom: 10px; text-shadow: 0 0 20px rgba(255,115,0,0.5);">SCRAP TYCOON</h1>
+            <h3 style="color: white; margin-bottom: 30px; letter-spacing: 2px;">ABSOLUTE EMPIRE</h3>
+            <p>Kumpulkan rongsok, jual, lunasi hutang, dan bangun kerajaan bisnismu!</p>
+            <button class="btn btn-accent" style="width: 100%; font-size: 1.2rem; padding: 15px;" onclick="initGame()">MULAI MAIN</button>
+        </div>
+    </div>
+
+    <!-- SIDEBAR STATS -->
+    <aside class="sidebar">
+        <div class="brand">Scrap Tycoon</div>
+        
+        <div class="stat-box" style="border-color:var(--money)">
+            <span class="stat-label">CASH <span style="color:var(--money)">$ <span id="stat-money">20</span></span></span>
+        </div>
+        
+        <div class="stat-box" style="border-color:var(--danger)">
+            <span class="stat-label">HUTANG (H-30) <span style="color:var(--danger)">$ <span id="stat-debt">0</span></span></span>
+            <button class="btn btn-danger" style="width:100%; margin-top:10px; padding: 8px; font-size:0.7rem;" onclick="payDebt()">CICIL HUTANG ($50)</button>
+        </div>
+        
+        <div class="stat-box" style="border-color:#bdc3c7">
+            <span class="stat-label">Gudang <span style="color:white"><span id="stat-scrap">0.0</span> / <span id="stat-max">10</span></span></span>
+            <div class="bar-container"><div id="fill-storage" class="bar-fill" style="background:#bdc3c7"></div></div>
+        </div>
+        
+        <div class="stat-box" style="border-color:var(--energy)">
+            <span class="stat-label">Energi ⚡ <span id="stat-energy" style="color:white">0</span></span>
+            <div class="bar-container"><div id="fill-energy" class="bar-fill" style="background:var(--energy)"></div></div>
+            
+            <span class="stat-label" style="margin-top:10px;">Air 💧 <span id="stat-thirst" style="color:white">0</span></span>
+            <div class="bar-container"><div id="fill-thirst" class="bar-fill" style="background:var(--thirst)"></div></div>
+        </div>
+        
+        <div class="stat-box" style="border-color:var(--xp)">
+            <span class="stat-label">Level <span id="stat-lvl" style="color:white; font-size: 1rem;">1</span></span>
+            <span class="stat-label" style="margin-top:5px; text-transform:none; font-weight:normal;">XP: <span id="stat-xp">0</span> / <span id="stat-nextxp">50</span></span>
+            <div class="bar-container"><div id="fill-xp" class="bar-fill" style="background:var(--xp)"></div></div>
+        </div>
+        
+        <div style="margin-top:auto; font-size: 0.75rem; color: #64748b; background: rgba(0,0,0,0.3); padding: 10px; border-radius: 8px;">
+            <p style="display:flex; justify-content:space-between; margin-bottom:5px;"><span>Luck:</span> <span style="color:white"><span id="stat-luck">5</span>%</span></p>
+            <button onclick="confirmReset()" style="width:100%; background:transparent; border:1px solid #333; color:#e74c3c; cursor:pointer; padding:5px; border-radius:4px; margin-top:10px; transition:0.2s;">Reset Data Game</button>
+        </div>
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="main-view">
+        <header class="header-top">
+            <div class="weather-badge" id="weather-display">☀ Cerah</div>
+            <div id="clock-display" style="font-family:'Courier New', monospace; font-weight:bold; font-size:1.4rem; color:var(--accent); text-shadow: 0 0 10px rgba(255,115,0,0.4);">08:00</div>
+            <div id="day-display" style="font-weight:900; color:white; background:var(--accent); padding: 5px 12px; border-radius: 6px;">DAY 1</div>
+        </header>
+
+        <!-- SCREEN: HOME (HUB) -->
+        <section id="scr-home" class="screen active">
+            <h2 class="section-title">🏠 HUB UTAMA</h2>
+            
+            <div id="better-up-zone" class="card" style="background:linear-gradient(135deg, rgba(155, 89, 182, 0.2), rgba(44, 62, 80, 0.8)); border-color:var(--xp); display:none; flex-direction:column; padding:25px; box-shadow: 0 0 20px rgba(155, 89, 182, 0.3);">
+                <h3 style="color:white; margin-bottom:10px; text-align:center;">✨ BETTER UP TERSEDIA! ✨</h3>
+                <p style="text-align:center; color:#bdc3c7; margin-bottom:15px; font-size:0.85rem;">Naik level akan mereset Scrap, Energi, Air, dan Waktu (Hari berganti). Buka fitur baru!</p>
+                <button class="btn" style="background:var(--xp); width:100%; font-size:1.1rem; box-shadow: 0 4px 15px rgba(155, 89, 182, 0.5);" onclick="betterUp()">NAIK LEVEL SEKARANG</button>
+            </div>
+
+            <div id="help-bot" class="card" style="border-left: 4px solid var(--warning);">
+                <div class="info">
+                    <h4 style="color:var(--warning)">🤖 DARURAT BOT</h4>
+                    <p>Stats 100% & $50 Cash instan. <br><span style="color:var(--danger)">Peringatan: Hutang +$500. Hanya bisa 1x.</span></p>
+                </div>
+                <button class="btn" style="background:var(--warning); color:black;" onclick="acceptHelp()">TERIMA</button>
+            </div>
+
+            <div class="nav-grid">
+                <div class="nav-card" onclick="setScr('scr-work')"><i>📦</i><span>COLLECT</span></div>
+                <div class="nav-card locked" id="nav-market" onclick="setScr('scr-market')"><i>🛒</i><span>MARKET</span><span class="lock-tag">Lv.2</span></div>
+                <div class="nav-card locked" id="nav-worker" onclick="setScr('scr-worker')"><i>👷</i><span>WORKERS</span><span class="lock-tag">Lv.2</span></div>
+                <div class="nav-card locked" id="nav-rest" onclick="setScr('scr-rest')"><i>🏠</i><span>RUMAH</span><span class="lock-tag">Lv.3</span></div>
+                <div class="nav-card locked" id="nav-upgrade" onclick="setScr('scr-upgrade')"><i>⚡</i><span>UPGRADE</span><span class="lock-tag">Lv.5</span></div>
+                <div class="nav-card locked" id="nav-robert" onclick="setScr('scr-robert')"><i>🤖</i><span>ROBERT</span><span class="lock-tag">Lv.7</span></div>
+                <div class="nav-card" onclick="setScr('scr-diary')"><i>📔</i><span>LOG/DIARY</span></div>
+            </div>
+        </section>
+
+        <!-- SCREEN: WORK -->
+        <section id="scr-work" class="screen">
+            <div class="work-area">
+                <h3 style="color:white; font-size:1.5rem;">KUMPULKAN RONGSOK</h3>
+                <p style="color:#8fa3b0; margin-top:5px;">1 Ambil = <span id="scrap-rate" style="color:white; font-weight:bold;">1.0</span> Scrap</p>
+                
+                <p id="weather-effect" style="font-size:0.85rem; color:var(--warning); margin-top:15px; background:rgba(241, 196, 15, 0.1); padding: 5px 15px; border-radius: 20px; border:1px solid rgba(241, 196, 15, 0.3);"></p>
+                
+                <button id="scrap-btn" onclick="collectScrap(event)">
+                    📦
+                    <div id="cd-overlay" class="cooldown-overlay"></div>
+                </button>
+                
+                <div id="work-msg" style="color:var(--danger); font-weight:bold; height:20px; transition:0.3s;"></div>
+                
+                <button class="btn btn-accent" style="width:100%; max-width: 300px; margin-top:30px; padding:15px; font-size:1rem;" onclick="sellAllScrap()">JUAL SEMUA KE PENGECUL ($)</button>
+                <p style="color:#8fa3b0; font-size:0.75rem; margin-top:10px;">Harga saat ini: $<span id="scrap-price">1</span> / Scrap</p>
+            </div>
+        </section>
+
+        <!-- SCREEN: REST -->
+        <section id="scr-rest" class="screen">
+            <h2 class="section-title">🏠 RUMAH & GYM</h2>
+            <div class="card">
+                <div class="info">
+                    <h4>Tidur (Akhiri Hari)</h4>
+                    <p>Pulihkan Energi +40, Air +20. Waktu maju ke 08:00 besok.<br><span style="color:var(--danger)">Biaya Hidup: Potong Cash 15%</span></p>
+                </div>
+                <button class="btn" style="background:#2c3e50;" onclick="actionSleep()">TIDUR</button>
+            </div>
+            <div class="card" style="border-left:4px solid var(--energy)">
+                <div class="info">
+                    <h4>Gym / Suplemen</h4>
+                    <p>Pulihkan Energi & Air hingga 100% secara instan.</p>
+                </div>
+                <button class="btn" style="background:var(--energy);" onclick="actionGym()">LATIH ($200)</button>
+            </div>
+        </section>
+
+        <!-- SCREEN: MARKET -->
+        <section id="scr-market" class="screen">
+            <h2 class="section-title">🛒 TOKO JALANAN</h2>
+            <p style="color:#8fa3b0; margin-bottom:15px; font-size:0.85rem;">Beli persediaan untuk bertahan hidup di jalanan.</p>
+            <div id="market-list"></div>
+        </section>
+
+        <!-- SCREEN: WORKER -->
+        <section id="scr-worker" class="screen">
+            <h2 class="section-title">👷 AGEN PEKERJA</h2>
+            <p style="color:#8fa3b0; margin-bottom:15px; font-size:0.85rem;">Rekrut orang untuk mengumpulkan scrap otomatis (berjalan tiap jam ingame).</p>
+            <div id="worker-list"></div>
+        </section>
+
+        <!-- SCREEN: UPGRADE -->
+        <section id="scr-upgrade" class="screen">
+            <h2 class="section-title">⚡ LAB UPGRADE</h2>
+            <p style="color:#8fa3b0; margin-bottom:15px; font-size:0.85rem;">Tingkatkan efisiensi kerja dan kapasitas gudang secara permanen.</p>
+            <div id="upgrade-list"></div>
+        </section>
+
+        <!-- SCREEN: ROBERT -->
+        <section id="scr-robert" class="screen">
+            <h2 class="section-title">🤖 ROBERT THE CYBORG</h2>
+            <div style="text-align:center; background: rgba(0,0,0,0.5); padding: 30px; border-radius: 15px; border: 1px solid #333;">
+                <div style="font-size: 4rem; margin-bottom: 20px;">🤖</div>
+                <h3 id="robert-status" style="color:var(--accent); margin-bottom:10px;">MENUNGGU MISI</h3>
+                <p id="robert-desc" style="color:#a0aec0; margin-bottom:25px; line-height:1.5;">"Aku butuh bantuanmu manusia. Selesaikan permintaanku, aku bayar mahal."</p>
+                
+                <div id="robert-progress-container" style="display:none; margin-bottom: 25px;">
+                    <div style="display:flex; justify-content:space-between; font-size:0.8rem; margin-bottom:5px;">
+                        <span id="robert-prog-text">Progress</span>
+                        <span><span id="robert-cur">0</span> / <span id="robert-max">100</span></span>
+                    </div>
+                    <div class="bar-container" style="height:12px; border-radius:6px; background:#222;"><div id="robert-bar" class="bar-fill" style="background:var(--warning);"></div></div>
+                </div>
+
+                <button id="robert-btn" class="btn btn-accent" style="width:100%; font-size:1.1rem; padding:15px;" onclick="handleRobert()">MINTA MISI BARU</button>
+            </div>
+        </section>
+
+        <!-- SCREEN: DIARY -->
+        <section id="scr-diary" class="screen">
+            <h2 class="section-title">📔 LOG DIARY</h2>
+            <div id="diary-log"></div>
+        </section>
+
+        <!-- FOOTER TABS -->
+        <footer class="footer">
+            <div class="tab active" id="tab-home" onclick="setScr('scr-home')"><i>🏠</i>HUB</div>
+            <div class="tab" id="tab-work" onclick="setScr('scr-work')"><i>📦</i>KERJA</div>
+            <div class="tab" id="tab-market" onclick="setScr('scr-market')"><i>🛒</i>SHOP</div>
+            <div class="tab" id="tab-worker" onclick="setScr('scr-worker')"><i>👷</i>TIM</div>
+            <div class="tab" id="tab-upgrade" onclick="setScr('scr-upgrade')"><i>⚡</i>UP</div>
+        </footer>
+    </main>
+
+    <!-- GLOBAL OVERLAYS -->
+    <div id="over-msg" class="overlay">
+        <div class="modal">
+            <h1 id="over-title">NOTIFIKASI</h1>
+            <p id="over-desc">Deskripsi pesan.</p>
+            <button class="btn btn-accent" style="width:100%" onclick="closeOverlay()">LANJUTKAN</button>
+        </div>
+    </div>
+    
+    <div id="over-bankrupt" class="overlay" style="background:rgba(20, 0, 0, 0.98);">
+        <div class="modal" style="border-color:var(--danger); background:#1a0505;">
+            <h1 style="color:var(--danger); font-size:2.5rem; text-shadow: 0 0 20px red;">BANGKRUT!</h1>
+            <p style="color:#e74c3c;">Waktu habis! Hutang tidak lunas di Hari 30. Penagih hutang menyita seluruh asetmu.</p>
+            <p style="color:white; font-weight:bold; margin-bottom:30px;">Kerajaan rongsokmu hancur.</p>
+            <button class="btn btn-danger" style="width:100%; font-size:1.2rem; padding:15px;" onclick="hardReset()">MULAI DARI NOL</button>
+        </div>
+    </div>
+
+    <script>
+        // --- AUDIO ENGINE ---
+        let audioCtx;
+        function initAudio() {
+            if(!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+        }
+
+        function playSfx(type) {
+            if(!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                
+                let freq = 400, oscType = 'square', dur = 0.1, vol = 0.1;
+                
+                switch(type) {
+                    case 'collect': freq = 400; oscType = 'sine'; dur = 0.1; vol = 0.1; break;
+                    case 'sell': freq = 800; oscType = 'sine'; dur = 0.15; vol = 0.1; break;
+                    case 'buy': freq = 600; oscType = 'triangle'; dur = 0.1; vol = 0.1; break;
+                    case 'error': freq = 150; oscType = 'sawtooth'; dur = 0.2; vol = 0.1; break;
+                    case 'levelup': freq = 900; oscType = 'square'; dur = 0.4; vol = 0.1; break;
+                    case 'quest': freq = 1200; oscType = 'sine'; dur = 0.3; vol = 0.1; break;
+                }
+
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                if(type === 'levelup') {
+                    osc.frequency.exponentialRampToValueAtTime(1200, audioCtx.currentTime + dur);
+                }
+                if(type === 'error') {
+                    osc.frequency.linearRampToValueAtTime(100, audioCtx.currentTime + dur);
+                }
+
+                osc.type = oscType;
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+                
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + dur);
+            } catch(e) { console.log("Audio failed", e); }
+        }
+
+        // --- GAME DATA ---
+        const WEATHERS = [
+            { id: 0, name: "☀ Cerah", effect: "Normal", color: "#f1c40f", mult: 1, text: "Cuaca bagus untuk mengais rongsok." },
+            { id: 1, name: "🌧 Hujan", effect: "Energi Cepat Habis", color: "#3498db", mult: 2, text: "Jalanan licin. Menguras tenaga 2x lipat." },
+            { id: 2, name: "🍀 Beruntung", effect: "Scrap +50%", color: "#2ecc71", mult: 1, text: "Hari keberuntungan! Pendapatan Scrap meningkat." }
+        ];
+
+        const ROBERT_QUESTS = [
+            { id: 0, desc: "Kumpulkan 100 Scrap secara total.", target: 100, reward: 200, type: "total_scrap" },
+            { id: 1, desc: "Jual barang dan kumpulkan $500 Cash.", target: 500, reward: 500, type: "total_money" },
+            { id: 2, desc: "Rekrut 5 Pekerja.", target: 5, reward: 800, type: "total_workers" },
+            { id: 3, desc: "Tingkatkan Gudang ke Level 3.", target: 3, reward: 1500, type: "storage_lvl" }
+        ];
+
+        const SHOP_ITEMS = [
+            { id: 'water', name: 'Air Mineral', price: 15, val: 40, target: 'thirst', icon: '💧', unlock: 2, desc: "Pulihkan Air +40%" },
+            { id: 'food', name: 'Nasi Kucing', price: 25, val: 40, target: 'energy', icon: '🍱', unlock: 2, desc: "Pulihkan Energi +40%" },
+            { id: 'coffee', name: 'Kopi Hitam', price: 40, val: 20, target: 'both', icon: '☕', unlock: 3, desc: "Pulihkan Keduanya +20%" }
+        ];
+
+        const UPGRADES_DB = [
+            { id: 'cd', name: 'Alat Capit (Cooldown)', base: 150, mult: 2.5, maxLv: 5, icon: '⏱', desc: 'Percepat waktu klik 📦' },
+            { id: 'income', name: 'Mesin Press (Harga)', base: 300, mult: 3, maxLv: 10, icon: '💵', desc: 'Harga Jual Scrap +$1' },
+            { id: 'storage', name: 'Sewa Lahan (Gudang)', base: 400, mult: 2, maxLv: 20, icon: '🏭', desc: 'Kapasitas Gudang +100' }
+        ];
+
+        // --- STATE DEFAULT ---
+        const DEFAULT_STATE = {
+            money: 20, scrap: 0, maxScrap: 20, energy: 50, thirst: 50, maxEnergy: 100, debt: 1500, 
+            day: 1, time: 480, level: 1, xp: 0, luck: 5, 
+            workers: { collector: 0 }, 
+            upgrades: { cd: 0, income: 1, storage: 0 }, 
+            botUsed: false, 
+            weatherId: 0,
+            malingActive: false, malingHp: 5,
+            questIdx: 0, questActive: false, questProg: 0,
+            stats: { totalScrap: 0, totalEarned: 0 }
+        };
+
+        let state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+        let gameLoop;
+
+        // --- CORE FUNCTIONS ---
+        function save() { localStorage.setItem('scrap_tycoon_abs', JSON.stringify(state)); }
+        function load() { 
+            let saved = localStorage.getItem('scrap_tycoon_abs'); 
+            if(saved) {
+                // Merge to prevent errors if structure changed
+                state = { ...DEFAULT_STATE, ...JSON.parse(saved) }; 
+                // Fix for upgrade struct changes
+                if(typeof state.upgrades.income === 'undefined') state.upgrades.income = 1;
+            }
+        }
+
+        function initGame() {
+            document.getElementById('start-screen').style.display = 'none';
+            initAudio();
+            load();
+            applyWeather();
+            updateUI();
+            setScr('scr-home');
+            addLog("Game Dimulai.");
+            
+            // Start Loop
+            clearInterval(gameLoop);
+            gameLoop = setInterval(tick, 1000);
+        }
+
+        function updateUI() {
+            // Stats
+            document.getElementById('stat-money').innerText = Math.floor(state.money);
+            document.getElementById('stat-debt').innerText = state.debt;
+            document.getElementById('stat-scrap').innerText = state.scrap.toFixed(1);
+            document.getElementById('stat-max').innerText = state.maxScrap;
+            document.getElementById('stat-energy').innerText = Math.floor(state.energy);
+            document.getElementById('stat-thirst').innerText = Math.floor(state.thirst);
+            document.getElementById('stat-lvl').innerText = state.level;
+            document.getElementById('stat-xp').innerText = Math.floor(state.xp);
+            
+            let nxt = state.level * 100; 
+            document.getElementById('stat-nextxp').innerText = nxt;
+            
+            // Bars
+            document.getElementById('fill-storage').style.width = Math.min(100, (state.scrap/state.maxScrap*100))+'%';
+            document.getElementById('fill-energy').style.width = Math.max(0, state.energy)+'%';
+            document.getElementById('fill-thirst').style.width = Math.max(0, state.thirst)+'%';
+            document.getElementById('fill-xp').style.width = Math.min(100, (state.xp/nxt*100))+'%';
+
+            // Critical warnings
+            document.getElementById('stat-energy').parentElement.classList.toggle('critical', state.energy < 15);
+            document.getElementById('stat-thirst').parentElement.classList.toggle('critical', state.thirst < 15);
+
+            // Time & Env
+            document.getElementById('clock-display').innerText = formatTime(state.time);
+            document.getElementById('day-display').innerText = "DAY " + state.day;
+
+            // UI Toggles
+            document.getElementById('better-up-zone').style.display = state.xp >= nxt ? 'flex' : 'none';
+            document.getElementById('help-bot').style.display = state.botUsed ? 'none' : 'flex';
+
+            // Navigation Locks
+            document.getElementById('nav-market').classList.toggle('locked', state.level < 2);
+            document.getElementById('nav-worker').classList.toggle('locked', state.level < 2);
+            document.getElementById('nav-rest').classList.toggle('locked', state.level < 3);
+            document.getElementById('nav-upgrade').classList.toggle('locked', state.level < 5);
+            document.getElementById('nav-robert').classList.toggle('locked', state.level < 7);
+
+            // Work screen specifics
+            let scrapVal = (state.level === 1 ? 1.0 : state.level * 2);
+            if(state.weatherId === 2) scrapVal *= 1.5; // Luck weather
+            document.getElementById('scrap-rate').innerText = scrapVal.toFixed(1);
+            document.getElementById('scrap-price').innerText = state.upgrades.income;
+
+            updateRobertUI();
+        }
+
+        // --- ACTION FUNCTIONS ---
+        function collectScrap(e) {
+            if(state.energy < 5 || state.thirst < 3) {
+                showMsg("Lelah!", "Energi atau air terlalu rendah. Pulihkan dulu.");
+                playSfx('error');
+                return;
+            }
+            if(state.scrap >= state.maxScrap) {
+                showMsg("Gudang Penuh!", "Jual scrap di gudang terlebih dahulu.");
+                playSfx('error');
+                return;
+            }
+
+            let baseGain = state.level === 1 ? 1.0 : state.level * 2;
+            let gain = baseGain;
+            
+            // Weather modifier
+            if(state.weatherId === 2) gain *= 1.5;
+
+            // Luck chance
+            if(Math.random()*100 < state.luck) { 
+                gain *= 3; 
+                createFloat(e.clientX, e.clientY, "LUCKY x3!", "var(--xp)"); 
+            } else {
+                createFloat(e.clientX, e.clientY, "+"+gain.toFixed(1), "white");
+            }
+
+            state.scrap = Math.min(state.maxScrap, state.scrap + gain);
+            state.stats.totalScrap += gain;
+            
+            // Drain cost
+            let drainMult = WEATHERS[state.weatherId].mult;
+            state.energy -= (6 * drainMult); 
+            state.thirst -= (4 * drainMult); 
+            state.xp += 10;
+            
+            checkQuestProgress('total_scrap');
+
+            playSfx('collect');
+
+            // Cooldown animation
+            const btn = document.getElementById('scrap-btn'); 
+            const ov = document.getElementById('cd-overlay');
+            btn.disabled = true; 
+            ov.style.height = "100%"; 
+            
+            let cd = Math.max(300, 2000 - (state.upgrades.cd * 300));
+            ov.style.transition = `height ${cd/1000}s linear`;
+            
+            setTimeout(() => { 
+                ov.style.transition = "none"; 
+                ov.style.height = "0%"; 
+                btn.disabled = false; 
+            }, cd);
+            
+            updateUI();
+        }
+
+        function sellAllScrap() { 
+            if(state.scrap < 1) { playSfx('error'); return; }
+            let gain = Math.floor(state.scrap * state.upgrades.income); 
+            state.money += gain; 
+            state.stats.totalEarned += gain;
+            state.scrap = 0; 
+            
+            checkQuestProgress('total_money');
+            playSfx('sell'); 
+            createFloat(window.innerWidth/2, window.innerHeight/2, "+$"+gain, "var(--money)");
+            addLog(`Jual Rongsok: +$${gain}`);
+            updateUI(); 
+            save();
+        }
+
+        function payDebt() {
+            if(state.money >= 50 && state.debt > 0) {
+                state.money -= 50; 
+                state.debt -= 50; 
+                if(state.debt < 0) state.debt = 0;
+                playSfx('buy'); 
+                addLog("Cicil hutang $50. Sisa: $" + state.debt); 
+                updateUI();
+            } else {
+                playSfx('error');
+            }
+        }
+
+        function betterUp() {
+            state.level++; 
+            state.xp = 0; 
+            state.day++; 
+            state.time = 480;
+            state.scrap = 0; 
+            state.energy = 100; 
+            state.thirst = 100;
+            
+            applyWeather();
+            playSfx('levelup'); 
+            showOverlay("LEVEL UP! Lv." + state.level, "Stats fisik dipulihkan 100%. Hari baru telah dimulai.");
+            addLog(`Mencapai Level ${state.level}!`);
+            setScr('scr-home'); 
+            save();
+        }
+
+        function acceptHelp() { 
+            state.energy = 100; state.thirst = 100; state.money += 50; state.debt += 500; state.botUsed = true; 
+            playSfx('buy'); addLog("Terima Bantuan Darurat."); updateUI(); save(); 
+        }
+
+        function actionSleep() { 
+            state.day++; state.time = 480; 
+            let tax = Math.floor(state.money * 0.15);
+            state.money -= tax;
+            state.energy = Math.min(100, state.energy + 40); 
+            state.thirst = Math.min(100, state.thirst + 20); 
+            applyWeather();
+            playSfx('buy');
+            addLog(`Tidur nyenyak. Biaya hidup (15%): -$${tax}`); 
+            updateUI(); save(); 
+        }
+
+        function actionGym() { 
+            if(state.money >= 200) { 
+                state.money -= 200; state.energy = 100; state.thirst = 100; 
+                playSfx('buy'); addLog("Gym/Suplemen: Fisik 100%!"); updateUI(); 
+            } else { playSfx('error'); }
+        }
+
+        // --- SHOP & UPGRADES ---
+        function renderMarket() {
+            const m = document.getElementById('market-list'); m.innerHTML = '';
+            SHOP_ITEMS.forEach(i => { 
+                let locked = state.level < i.unlock; 
+                m.innerHTML += `
+                <div class="card" style="opacity:${locked?0.4:1}">
+                    <div class="info">
+                        <h4>${i.icon} ${i.name}</h4>
+                        <p>${i.desc}</p>
+                    </div>
+                    <button class="btn" onclick="buyItem('${i.id}',${i.price})" ${locked || state.money<i.price ? 'disabled' : ''}>
+                        ${locked ? 'Lv.'+i.unlock : '$'+i.price}
+                    </button>
+                </div>`; 
+            });
+        }
+
+        function buyItem(id, price) { 
+            if(state.money >= price) { 
+                state.money -= price; 
+                let itm = SHOP_ITEMS.find(x=>x.id===id); 
+                if(itm.target === 'both') { state.energy = Math.min(100, state.energy + itm.val); state.thirst = Math.min(100, state.thirst + itm.val); }
+                else { state[itm.target] = Math.min(100, state[itm.target] + itm.val); }
+                playSfx('buy'); updateUI(); renderMarket(); 
+            } 
+        }
+
+        function renderWorkers() { 
+            let price = 50 + (state.workers.collector * 25);
+            document.getElementById('worker-list').innerHTML = `
+            <div class="card">
+                <div class="info">
+                    <h4>Pekerja Pemulung</h4>
+                    <p>Miliki: ${state.workers.collector} orang<br>Kumpul otomatis 1 Scrap/Jam ingame.</p>
+                </div>
+                <button class="btn" onclick="buyWorker(${price})" ${state.money<price ? 'disabled':''}>REKRUT ($${price})</button>
+            </div>`; 
+        }
+
+        function buyWorker(price) { 
+            if(state.money >= price) { 
+                state.money -= price; 
+                state.workers.collector++; 
+                playSfx('buy'); 
+                checkQuestProgress('total_workers');
+                renderWorkers(); updateUI(); 
+            } 
+        }
+
+        function renderUpgrades() {
+            const u = document.getElementById('upgrade-list'); u.innerHTML = '';
+            UPGRADES_DB.forEach(i => { 
+                let lv = state.upgrades[i.id];
+                let price = Math.floor(i.base * Math.pow(i.mult, lv)); 
+                let isMax = lv >= i.maxLv;
+
+                u.innerHTML += `
+                <div class="card">
+                    <div class="info">
+                        <h4>${i.icon} ${i.name} (Lv.${lv}/${i.maxLv})</h4>
+                        <p>${i.desc}</p>
+                    </div>
+                    <button class="btn" onclick="buyUpgrade('${i.id}',${price})" ${isMax || state.money<price ? 'disabled' : ''}>
+                        ${isMax ? 'MAX' : '$'+price}
+                    </button>
+                </div>`; 
+            });
+        }
+
+        function buyUpgrade(id, price) { 
+            if(state.money >= price) { 
+                state.money -= price; 
+                state.upgrades[id]++; 
+                if(id==='storage') state.maxScrap += 100; 
+                
+                playSfx('levelup'); 
+                checkQuestProgress('storage_lvl');
+                renderUpgrades(); updateUI(); 
+            } 
+        }
+
+        // --- ROBERT SYSTEM ---
+        function updateRobertUI() {
+            if(state.level < 7) return;
+            
+            const btn = document.getElementById('robert-btn');
+            const desc = document.getElementById('robert-desc');
+            const stat = document.getElementById('robert-status');
+            const progCon = document.getElementById('robert-progress-container');
+
+            if(state.questIdx >= ROBERT_QUESTS.length) {
+                stat.innerText = "SEMUA MISI SELESAI";
+                stat.style.color = "var(--money)";
+                desc.innerText = `"Kerja bagus manusia. Aku tidak punya tugas lagi untukmu."`;
+                btn.style.display = "none";
+                progCon.style.display = "none";
+                return;
+            }
+
+            let q = ROBERT_QUESTS[state.questIdx];
+
+            if(!state.questActive) {
+                stat.innerText = "MISI TERSEDIA";
+                stat.style.color = "var(--accent)";
+                desc.innerText = `Reward: $${q.reward}\nTugas: ${q.desc}`;
+                btn.innerText = "TERIMA MISI";
+                btn.disabled = false;
+                progCon.style.display = "none";
+            } else {
+                // Update Progress logic
+                let cur = 0;
+                if(q.type === 'total_scrap') cur = state.stats.totalScrap;
+                if(q.type === 'total_money') cur = state.stats.totalEarned;
+                if(q.type === 'total_workers') cur = state.workers.collector;
+                if(q.type === 'storage_lvl') cur = state.upgrades.storage;
+
+                state.questProg = Math.min(q.target, cur);
+
+                stat.innerText = "MISI AKTIF";
+                stat.style.color = "var(--warning)";
+                desc.innerText = `Tugas: ${q.desc}\nReward: $${q.reward}`;
+                
+                progCon.style.display = "block";
+                document.getElementById('robert-cur').innerText = Math.floor(state.questProg);
+                document.getElementById('robert-max').innerText = q.target;
+                document.getElementById('robert-bar').style.width = (state.questProg/q.target*100) + '%';
+
+                if(state.questProg >= q.target) {
+                    btn.innerText = "KLAIM REWARD";
+                    btn.disabled = false;
+                    btn.classList.remove('btn-accent');
+                    btn.classList.add('btn'); // Make it green (money)
+                } else {
+                    btn.innerText = "SEDANG DIKERJAKAN...";
+                    btn.disabled = true;
+                }
+            }
+        }
+
+        function handleRobert() {
+            if(!state.questActive) {
+                // Take quest
+                state.questActive = true;
+                playSfx('quest');
+                addLog(`Menerima misi Robert: ${ROBERT_QUESTS[state.questIdx].desc}`);
+            } else {
+                // Claim reward
+                let q = ROBERT_QUESTS[state.questIdx];
+                if(state.questProg >= q.target) {
+                    state.money += q.reward;
+                    playSfx('sell');
+                    addLog(`Misi Selesai! Reward +$${q.reward}`);
+                    showOverlay("MISI SELESAI!", `Robert membayarmu $${q.reward}.`);
+                    
+                    state.questActive = false;
+                    state.questProg = 0;
+                    state.questIdx++;
+                }
+            }
+            updateUI();
+            save();
+        }
+
+        function checkQuestProgress(typeTrigger) {
+            if(!state.questActive || state.level < 7 || state.questIdx >= ROBERT_QUESTS.length) return;
+            if(ROBERT_QUESTS[state.questIdx].type === typeTrigger) {
+                updateRobertUI(); // Re-calc and update UI
+            }
+        }
+
+        // --- UTILS & CORE LOOP ---
+        function applyWeather() {
+            state.weatherId = Math.floor(Math.random() * WEATHERS.length);
+            let w = WEATHERS[state.weatherId];
+            const wd = document.getElementById('weather-display');
+            wd.innerHTML = w.name;
+            wd.style.color = w.color;
+            document.getElementById('weather-effect').innerText = w.text;
+        }
+
+        function formatTime(t) { 
+            let h = Math.floor(t/60); let m = Math.floor(t%60); 
+            return `${h.toString().padStart(2,'0')}:${m.toString().padStart(2,'0')}`; 
+        }
+
+        function showMsg(t, d) { document.getElementById('work-msg').innerText = d; setTimeout(()=>document.getElementById('work-msg').innerText="", 3000); }
+        function showOverlay(t, d) { document.getElementById('over-title').innerText = t; document.getElementById('over-desc').innerText = d; document.getElementById('over-msg').style.display = 'flex'; }
+        function closeOverlay() { document.getElementById('over-msg').style.display = 'none'; }
+        
+        function addLog(m) { 
+            const l = document.getElementById('diary-log'); 
+            if(!l) return;
+            const timeStr = formatTime(state.time);
+            const entry = `<div class="log-entry"><span class="log-day">[H${state.day} ${timeStr}]</span> ${m}</div>`;
+            l.innerHTML = entry + l.innerHTML; 
+        }
+
+        function createFloat(x, y, text, color) { 
+            let f = document.createElement('div'); 
+            f.className = 'floating'; 
+            f.style.left = x+'px'; 
+            f.style.top = y+'px'; 
+            f.style.color = color || '#fff'; 
+            f.innerText = text; 
+            document.body.appendChild(f); 
+            setTimeout(() => f.remove(), 1000); 
+        }
+
+        // TAB NAVIGATION
+        function setScr(id) {
+            if((id==='scr-market' && state.level<2) || (id==='scr-worker' && state.level<2) || (id==='scr-rest' && state.level<3) || (id==='scr-upgrade' && state.level<5) || (id==='scr-robert' && state.level<7)) return;
+            
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            
+            document.getElementById(id).classList.add('active');
+            const tid = "tab-" + id.split('-')[1]; 
+            if(document.getElementById(tid)) document.getElementById(tid).classList.add('active');
+            
+            if(id === 'scr-market') renderMarket();
+            if(id === 'scr-worker') renderWorkers();
+            if(id === 'scr-upgrade') renderUpgrades();
+            if(id === 'scr-robert') updateRobertUI();
+        }
+
+        // EVENT: THIEF
+        function spawnMaling() {
+            state.malingActive = true; 
+            state.malingHp = 5 + Math.floor(state.level/2); // Gets harder
+            const el = document.getElementById('maling');
+            
+            // Random position safe within screen
+            let x = Math.max(20, Math.random() * (window.innerWidth - 100));
+            let y = Math.max(20, Math.random() * (window.innerHeight - 200));
+            
+            el.style.left = x + 'px';
+            el.style.top = y + 'px';
+            el.style.display = 'flex';
+            document.getElementById('maling-hp').innerText = state.malingHp;
+            
+            playSfx('error');
+            
+            // Timeout if not clicked
+            setTimeout(() => {
+                if(state.malingActive) {
+                    let stolen = Math.floor(state.money * 0.1); // Steals 10%
+                    state.money -= stolen;
+                    addLog(`Maling kabur! Cash dicuri: -$${stolen}`);
+                    createFloat(x, y, `-$${stolen}`, "var(--danger)");
+                    state.malingActive = false;
+                    el.style.display = 'none';
+                    updateUI();
+                }
+            }, 5000);
+        }
+
+        function hajarMaling() { 
+            state.malingHp--; 
+            document.getElementById('maling-hp').innerText = state.malingHp; 
+            playSfx('buy'); // punch sound alt
+            
+            if(state.malingHp <= 0) { 
+                state.malingActive = false; 
+                document.getElementById('maling').style.display = 'none'; 
+                
+                let reward = 10 * state.level;
+                state.money += reward;
+                addLog(`Maling dihajar! Reward: +$${reward}`);
+                createFloat(window.innerWidth/2, window.innerHeight/2, `+$${reward}`, "var(--money)");
+                updateUI();
+            } 
+        }
+
+        // CORE TICK LOOP
+        function tick() {
+            state.time += 2; // 2 ingame minutes per real second
+            
+            // Day Cycle
+            if(state.time >= 1440) { // 24:00
+                state.time = 480; // Reset to 08:00
+                state.day++; 
+                applyWeather();
+                
+                // End game condition check
+                if(state.day > 30 && state.debt > 0) {
+                    clearInterval(gameLoop);
+                    document.getElementById('over-bankrupt').style.display = 'flex';
+                    playSfx('error');
+                    return;
+                }
+            }
+
+            // Workers logic (Every in-game hour approx)
+            if(state.time % 60 === 0 && state.workers.collector > 0 && state.scrap < state.maxScrap) {
+                let wGain = state.workers.collector * 1.0;
+                state.scrap = Math.min(state.maxScrap, state.scrap + wGain);
+                state.stats.totalScrap += wGain;
+                checkQuestProgress('total_scrap');
+            }
+
+            // Passive Drain
+            state.thirst -= 0.05; 
+            state.energy -= 0.03;
+            
+            // Death Check
+            if(state.energy <= 0 || state.thirst <= 0) {
+                state.energy = 20; state.thirst = 20;
+                let penalty = Math.floor(state.money * 0.2);
+                state.money -= penalty;
+                showOverlay("PINGSAN!", `Kamu pingsan di jalanan. Biaya rumah sakit memotong $${penalty} (20% Cash).`);
+                addLog(`PINGSAN! Bayar RS: -$${penalty}`);
+            }
+
+            // Random Maling Event (Lv 5+, 1% chance per second)
+            if(state.level >= 5 && !state.malingActive && Math.random() < 0.01) { 
+                spawnMaling();
+            }
+
+            updateUI(); 
+            // Save periodically every ~5 real seconds
+            if(Math.floor(state.time) % 10 === 0) save(); 
+        }
+
+        function confirmReset() { if(confirm("Yakin ingin menghapus semua progress?")) hardReset(); }
+        function hardReset() { localStorage.removeItem('scrap_tycoon_abs'); location.reload(); }
+
+    </script>
+</body>
+</html>
