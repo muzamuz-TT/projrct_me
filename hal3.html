@@ -8,7 +8,7 @@
 
 <style>
 :root {
-    --glass: rgba(0, 0, 0, 0.4);
+    --glass: rgba(0, 0, 0, 0.6);
     --glass-border: rgba(255, 255, 255, 0.1);
     --accent: #fff;
 }
@@ -43,14 +43,14 @@ body {
     background-image: url('https://lh3.googleusercontent.com/u/0/d/1jgnps4Jqq24CBpMHeJeV2zICofWdw2g3');
     background-size: cover;
     background-position: center;
-    filter: brightness(0.6);
+    filter: brightness(0.4) blur(2px);
     transform: scale(1.1);
 }
 
 .overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8));
+    background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.9));
     z-index: -1;
     pointer-events: none;
 }
@@ -93,9 +93,9 @@ body {
     margin: 120px 20px;
     padding: 60px 50px;
     background: var(--glass);
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border-radius: 20px;
+    backdrop-filter: blur(25px);
+    -webkit-backdrop-filter: blur(25px);
+    border-radius: 30px;
     border: 1px solid var(--glass-border);
     line-height: 2;
     box-shadow: 0 40px 100px rgba(0,0,0,0.8);
@@ -117,6 +117,9 @@ body {
     border-left: 5px solid white;
     padding-left: 25px;
     line-height: 1.2;
+    background: linear-gradient(to right, #fff, #888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 .story-text {
@@ -124,25 +127,28 @@ body {
     opacity: 0.9;
     text-align: justify;
     font-weight: 300;
-    color: #fff;
+    color: #eee;
     letter-spacing: 0.5px;
 }
 
 .footnote {
     font-size: 0.85em;
-    color: rgba(255,255,255,0.6);
+    color: rgba(255,255,255,0.5);
     font-style: italic;
     display: block;
     margin-top: 5px;
     line-height: 1.4;
+    padding: 5px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 5px;
 }
 
 .stars {
     text-align: center;
-    margin: 50px 0;
+    margin: 60px 0;
     font-size: 1.2em;
-    letter-spacing: 15px;
-    opacity: 0.3;
+    letter-spacing: 20px;
+    opacity: 0.2;
 }
 
 .link-section {
@@ -168,9 +174,9 @@ body {
     font-size: 10px;
     letter-spacing: 4px;
     padding: 18px 35px;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.05);
     border: 1px solid var(--glass-border);
-    border-radius: 5px;
+    border-radius: 10px;
     transition: 0.4s;
     text-transform: uppercase;
 }
@@ -179,7 +185,7 @@ body {
     background: white;
     color: black;
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+    box-shadow: 0 10px 30px rgba(255,255,255,0.1);
 }
 
 /* Floating Particles */
@@ -189,7 +195,12 @@ body {
     border-radius: 50%;
     pointer-events: none;
     z-index: -2;
-    opacity: 0.15;
+    opacity: 0.2;
+}
+
+@keyframes drift {
+    from { transform: translateY(0) rotate(0deg); }
+    to { transform: translateY(-100vh) rotate(360deg); }
 }
 
 /* Scrollbar Custom */
@@ -272,7 +283,7 @@ body {
         <div class="stars">***</div>
 
         <div class="link-section">
-            <p>Info: Cerita belum selesai dibuat, wajarin ya kalau berubah terus ^.^</p>
+            <p>Info: Cerita dalam tahap pengembangan intensif ^.^</p>
             <p>Eksplorasi Narasi Lebih Jauh</p>
             <a href="https://docs.google.com/document/d/1KB4QUf55EOmRT1m1HhiNulSitKtzEpBl_S8hAog9MRM/edit?usp=sharing" target="_blank" class="link-full">
                 BACA VERSI LENGKAP <i class="fas fa-external-link-alt"></i>
@@ -284,23 +295,32 @@ body {
         // Parallax Effect
         const container = document.getElementById('parallax-container');
         document.addEventListener('mousemove', (e) => {
-            const x = (window.innerWidth / 2 - e.pageX) / 75;
-            const y = (window.innerHeight / 2 - e.pageY) / 75;
+            const x = (window.innerWidth / 2 - e.pageX) / 60;
+            const y = (window.innerHeight / 2 - e.pageY) / 60;
             container.style.transform = `translate(${x}px, ${y}px)`;
         });
 
-        // Background Particles
+        // Floating Snow/Particles Effect
         const pContainer = document.getElementById('particles-js');
-        for (let i = 0; i < 25; i++) {
+        function createParticle() {
             const p = document.createElement('div');
             p.className = 'particle';
-            const size = Math.random() * 2 + 0.5;
+            const size = Math.random() * 3 + 1;
             p.style.width = size + 'px';
             p.style.height = size + 'px';
             p.style.left = Math.random() * 100 + 'vw';
-            p.style.top = Math.random() * 100 + 'vh';
-            p.style.opacity = Math.random() * 0.2;
+            p.style.top = '100vh';
+            p.style.opacity = Math.random() * 0.5;
+            
+            const duration = 10 + Math.random() * 10;
+            p.style.animation = `drift ${duration}s linear infinite`;
+            p.style.animationDelay = `-${Math.random() * duration}s`;
+            
             pContainer.appendChild(p);
+        }
+
+        for (let i = 0; i < 50; i++) {
+            createParticle();
         }
     </script>
 
