@@ -1,179 +1,204 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rimuzz - Home</title>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rimuzz - Home</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-<style>
-:root {
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
-}
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
 
-body {
-    margin: 0;
-    padding: 0;
-    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-    min-height: 100vh;
-    background-color: #000;
-    color: white;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            background-color: #000;
+            color: white;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
 
-#parallax-container {
-    position: fixed;
-    top: -10%;
-    left: -10%;
-    width: 120%;
-    height: 120%;
-    z-index: -3;
-    transition: transform 0.2s cubic-bezier(0.1, 0.5, 0.2, 1);
-}
+        #parallax-container {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            z-index: -3;
+            transition: transform 0.2s cubic-bezier(0.1, 0.5, 0.2, 1);
+        }
 
-#bg-image {
-    width: 100%;
-    height: 100%;
-    background-image: url('https://lh3.googleusercontent.com/u/0/d/10_EZUNRtKgGIhxoBPZdx8uEd0bfOZG4o');
-    background-size: cover;
-    background-position: center;
-    filter: blur(4px) brightness(0.5);
-    transform: scale(1.1);
-    animation: slowBreath 15s infinite alternate ease-in-out;
-}
+        #bg-image {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://lh3.googleusercontent.com/u/0/d/10_EZUNRtKgGIhxoBPZdx8uEd0bfOZG4o');
+            background-size: cover;
+            background-position: center;
+            filter: blur(4px) brightness(0.5);
+            transform: scale(1.1);
+            animation: slowBreath 15s infinite alternate ease-in-out;
+        }
 
-@keyframes slowBreath {
-    from { transform: scale(1.1); }
-    to { transform: scale(1.15); }
-}
+        @keyframes slowBreath {
+            from { transform: scale(1.1); }
+            to { transform: scale(1.15); }
+        }
 
-.overlay {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
-                radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.03) 0%, transparent 60%);
-    background-size: 100% 3px, 100% 100%;
-    z-index: -1;
-    pointer-events: none;
-}
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%), 
+                        radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,0.03) 0%, transparent 60%);
+            background-size: 100% 3px, 100% 100%;
+            z-index: -1;
+            pointer-events: none;
+        }
 
-.content-card {
-    position: relative;
-    background: var(--glass);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border: 1px solid var(--glass-border);
-    border-radius: 40px;
-    padding: 60px 40px;
-    width: 90%;
-    max-width: 500px;
-    text-align: center;
-    z-index: 10;
-    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeInUp 1.2s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
-}
+        .content-card {
+            position: relative;
+            background: var(--glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 60px 40px;
+            width: 90%;
+            max-width: 500px;
+            text-align: center;
+            z-index: 10;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1.2s forwards cubic-bezier(0.2, 0.8, 0.2, 1);
+        }
 
-@keyframes fadeInUp {
-    to { opacity: 1; transform: translateY(0); }
-}
+        @keyframes fadeInUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-h1 {
-    font-size: 3.5em;
-    letter-spacing: 12px;
-    margin-bottom: 10px;
-    text-transform: uppercase;
-    font-weight: 900;
-    background: linear-gradient(to bottom, #fff, #aaa);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-}
+        h1 {
+            font-size: 3.5em;
+            letter-spacing: 12px;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            font-weight: 900;
+            background: linear-gradient(to bottom, #fff, #aaa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
 
-.sub-title {
-    font-size: 0.9em;
-    letter-spacing: 5px;
-    opacity: 0.5;
-    margin-bottom: 30px;
-    text-transform: uppercase;
-}
+        .sub-title {
+            font-size: 0.9em;
+            letter-spacing: 5px;
+            opacity: 0.5;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
 
-.intro-text {
-    font-size: 1.05em;
-    line-height: 1.8;
-    margin-bottom: 45px;
-    opacity: 0.8;
-    font-weight: 300;
-}
+        .intro-text {
+            font-size: 1.05em;
+            line-height: 1.8;
+            margin-bottom: 45px;
+            opacity: 0.8;
+            font-weight: 300;
+        }
 
-.nav-container {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    flex-wrap: wrap;
-}
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
 
-.btn-nav {
-    text-decoration: none;
-    color: white;
-    background: rgba(255, 255, 255, 0.05);
-    padding: 15px 25px;
-    border-radius: 100px;
-    border: 1px solid var(--glass-border);
-    font-weight: 600;
-    font-size: 11px;
-    letter-spacing: 2px;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-}
+        .btn-nav {
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 15px 25px;
+            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.btn-nav:hover {
-    background: white;
-    color: black;
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(255,255,255,0.15);
-}
+        .btn-nav:hover {
+            background: white;
+            color: black;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255,255,255,0.15);
+        }
 
-.btn-nav.btn-arcade {
-    border-color: rgba(255, 165, 0, 0.3);
-}
+        .btn-arcade {
+            text-decoration: none;
+            color: white;
+            background: rgba(255, 165, 0, 0.05);
+            padding: 15px 25px;
+            border-radius: 100px;
+            border: 1px solid rgba(255, 165, 0, 0.3);
+            font-weight: 600;
+            font-size: 11px;
+            letter-spacing: 2px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
 
-.btn-nav.btn-arcade:hover {
-    background: #ffa500;
-    color: black;
-    box-shadow: 0 10px 20px rgba(255, 165, 0, 0.2);
-}
+        .btn-arcade:hover {
+            background: #ffa500;
+            color: black;
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(255, 165, 0, 0.2);
+        }
 
-.particle {
-    position: absolute;
-    background: white;
-    border-radius: 50%;
-    pointer-events: none;
-    z-index: -2;
-    opacity: 0.3;
-}
+        /* Styling khusus tombol krisar agar lebih menonjol */
+        .btn-krisar {
+            background: rgba(59, 130, 246, 0.1);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
 
-@keyframes floatAround {
-    0% { transform: translate(0, 0); }
-    50% { transform: translate(20px, -30px); }
-    100% { transform: translate(-10px, 10px); }
-}
+        .btn-krisar:hover {
+            background: #3b82f6;
+            color: white;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
 
-.footer-info {
-    position: fixed;
-    bottom: 30px;
-    font-size: 10px;
-    letter-spacing: 3px;
-    opacity: 0.4;
-    text-transform: uppercase;
-}
-</style>
+        .particle {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: -2;
+            opacity: 0.3;
+        }
+
+        @keyframes floatAround {
+            0% { transform: translate(0, 0); }
+            50% { transform: translate(20px, -30px); }
+            100% { transform: translate(-10px, 10px); }
+        }
+
+        .footer-info {
+            position: fixed;
+            bottom: 30px;
+            font-size: 10px;
+            letter-spacing: 3px;
+            opacity: 0.4;
+            text-transform: uppercase;
+        }
+    </style>
 </head>
 
 <body>
@@ -202,9 +227,12 @@ h1 {
         <a href="hal3.html" class="btn-nav">
             <i class="fas fa-feather-alt"></i> STORIES
         </a>
-        <!-- LINK DIPERBAIKI KE scrap_tycoon.html -->
         <a href="Scrap_Tycoon.html" class="btn-arcade">
             <i class="fas fa-gamepad"></i> ARCADE
+        </a>
+        <!-- TOMBOL KRISAR BARU -->
+        <a href="krisar.html" class="btn-nav btn-krisar">
+            <i class="fas fa-comment-dots"></i> KRISAR
         </a>
     </div>
 </div>
