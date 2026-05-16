@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rimuzz - Kritik & Saran</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <style>
+        :root {
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent: #3b82f6;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            min-height: 100vh;
+            background-color: #000;
+            color: white;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Background matching the home page */
+        #parallax-container {
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 120%;
+            z-index: -3;
+        }
+
+        #bg-image {
+            width: 100%;
+            height: 100%;
+            background-image: url('https://lh3.googleusercontent.com/u/0/d/10_EZUNRtKgGIhxoBPZdx8uEd0bfOZG4o');
+            background-size: cover;
+            background-position: center;
+            filter: blur(8px) brightness(0.4);
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.4) 100%);
+            z-index: -1;
+        }
+
+        .content-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 50px 30px;
+            width: 90%;
+            max-width: 450px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(59, 130, 246, 0.2);
+            border-radius: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 25px;
+            color: var(--accent);
+            font-size: 30px;
+        }
+
+        h2 {
+            font-size: 2em;
+            letter-spacing: 4px;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+
+        p {
+            font-size: 0.95em;
+            line-height: 1.6;
+            opacity: 0.7;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        .btn-submit {
+            display: block;
+            text-decoration: none;
+            color: white;
+            background: var(--accent);
+            padding: 18px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+            letter-spacing: 2px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(59, 130, 246, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-back {
+            display: inline-block;
+            margin-top: 25px;
+            color: white;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 1px;
+            opacity: 0.5;
+            transition: opacity 0.3s;
+        }
+
+        .btn-back:hover {
+            opacity: 1;
+        }
+
+        .btn-back i {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="parallax-container">
+    <div id="bg-image"></div>
+</div>
+
+<div class="overlay"></div>
+
+<div class="content-card">
+    <div class="icon-box">
+        <i class="fas fa-comment-alt"></i>
+    </div>
+    
+    <h2>KRISAR</h2>
+    
+    <p>
+        Bantu Rimuzz jadi lebih baik. <br>
+        Sampaikan kritik, saran, atau ide kamu <br>
+        melalui formulir dokumen di bawah ini.
+    </p>
+
+    <a href="https://docs.google.com/document/d/1g6tQsC1-HVHsAyPKvv3TN1pvCD3kxNH1D3uEngmLQZk/edit" target="_blank" class="btn-submit">
+        Buka Formulir <i class="fas fa-external-link-alt" style="margin-left: 8px; font-size: 10px;"></i>
+    </a>
+
+    <a href="index.html" class="btn-back">
+        <i class="fas fa-arrow-left"></i> Kembali ke Home
+    </a>
+</div>
+
+</body>
+</html>
