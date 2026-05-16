@@ -20,10 +20,11 @@
             min-height: 100vh;
             background-color: #000;
             color: white;
-            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
         /* Background matching the home page */
@@ -58,12 +59,14 @@
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid var(--glass-border);
             border-radius: 40px;
-            padding: 50px 30px;
-            width: 90%;
-            max-width: 450px;
+            padding: 40px 30px;
+            width: 100%;
+            max-width: 500px;
             text-align: center;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
             animation: fadeIn 0.8s ease-out;
+            position: relative;
+            z-index: 10;
         }
 
         @keyframes fadeIn {
@@ -71,51 +74,71 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-        .icon-box {
-            width: 70px;
-            height: 70px;
-            background: rgba(59, 130, 246, 0.2);
-            border-radius: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin: 0 auto 25px;
-            color: var(--accent);
-            font-size: 30px;
-        }
-
         h2 {
-            font-size: 2em;
+            font-size: 1.8em;
             letter-spacing: 4px;
-            margin-bottom: 15px;
+            margin-bottom: 5px;
             text-transform: uppercase;
             font-weight: 800;
         }
 
-        p {
-            font-size: 0.95em;
-            line-height: 1.6;
-            opacity: 0.7;
-            margin-bottom: 35px;
+        .sub-text {
+            font-size: 0.9em;
+            opacity: 0.6;
+            margin-bottom: 30px;
             font-weight: 300;
         }
 
-        .btn-submit {
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
             display: block;
-            text-decoration: none;
-            color: white;
-            background: var(--accent);
-            padding: 18px;
-            border-radius: 20px;
-            font-weight: 700;
+            margin-bottom: 8px;
             font-size: 12px;
-            letter-spacing: 2px;
-            transition: all 0.3s ease;
+            letter-spacing: 1px;
             text-transform: uppercase;
+            opacity: 0.8;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: white;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        button {
+            width: 100%;
+            padding: 16px;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-size: 14px;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
             box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
         }
 
-        .btn-submit:hover {
+        button:hover {
             transform: translateY(-3px);
             box-shadow: 0 15px 25px rgba(59, 130, 246, 0.4);
             filter: brightness(1.1);
@@ -123,7 +146,7 @@
 
         .btn-back {
             display: inline-block;
-            margin-top: 25px;
+            margin-top: 20px;
             color: white;
             text-decoration: none;
             font-size: 11px;
@@ -136,8 +159,10 @@
             opacity: 1;
         }
 
-        .btn-back i {
-            margin-right: 5px;
+        hr {
+            border: 0;
+            border-top: 1px solid var(--glass-border);
+            margin: 20px 0;
         }
     </style>
 </head>
@@ -150,21 +175,37 @@
 <div class="overlay"></div>
 
 <div class="content-card">
-    <div class="icon-box">
-        <i class="fas fa-comment-alt"></i>
-    </div>
-    
     <h2>KRISAR</h2>
+    <p class="sub-text">Bantu kami menjadi lebih baik dengan masukan Anda.</p>
     
-    <p>
-        Bantu Rimuzz jadi lebih baik. <br>
-        Sampaikan kritik, saran, atau ide kamu <br>
-        melalui formulir dokumen di bawah ini.
-    </p>
+    <form action="https://formspree.io/f/xaqkwnkg" method="POST">
+        
+        <div class="form-group">
+            <label for="nama">Nama (Opsional)</label>
+            <input type="text" id="nama" name="Nama Pengirim" placeholder="Nama Anda (Bisa dikosongkan)">
+        </div>
 
-    <a href="https://docs.google.com/document/d/1g6tQsC1-HVHsAyPKvv3TN1pvCD3kxNH1D3uEngmLQZk/edit" target="_blank" class="btn-submit">
-        Buka Formulir <i class="fas fa-external-link-alt" style="margin-left: 8px; font-size: 10px;"></i>
-    </a>
+        <div class="form-group">
+            <label for="email">Email Anda</label>
+            <input type="email" id="email" name="_replyto" placeholder="nama@email.com" required>
+        </div>
+
+        <hr>
+
+        <div class="form-group">
+            <label for="kritik">Kritik</label>
+            <textarea id="kritik" name="Kritik Pengguna" rows="3" placeholder="Apa keluhan atau kendala Anda?" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="saran">Saran</label>
+            <textarea id="saran" name="Saran Pengguna" rows="3" placeholder="Apa ide atau solusi perbaikan dari Anda?" required></textarea>
+        </div>
+
+        <input type="hidden" name="_subject" value="Kritik & Saran Baru Masuk!">
+
+        <button type="submit">Kirim Masukan</button>
+    </form>
 
     <a href="index.html" class="btn-back">
         <i class="fas fa-arrow-left"></i> Kembali ke Home
