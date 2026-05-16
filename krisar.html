@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rimuzz - Kritik & Saran</title>
+    <title>Rimuzz - Kritik, Saran & Ide</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <style>
@@ -11,6 +11,7 @@
             --glass: rgba(255, 255, 255, 0.05);
             --glass-border: rgba(255, 255, 255, 0.1);
             --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.3);
         }
 
         body {
@@ -23,11 +24,11 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 40px 20px;
             box-sizing: border-box;
+            overflow-x: hidden;
         }
 
-        /* Background matching the home page */
         #parallax-container {
             position: fixed;
             top: -10%;
@@ -97,10 +98,11 @@
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-size: 12px;
+            font-size: 11px;
             letter-spacing: 1px;
             text-transform: uppercase;
             opacity: 0.8;
+            color: #fff;
         }
 
         .form-group input, .form-group textarea {
@@ -113,12 +115,22 @@
             font-size: 14px;
             box-sizing: border-box;
             transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .form-group input:focus, .form-group textarea:focus {
             outline: none;
             border-color: var(--accent);
             background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .ide-section {
+            background: rgba(59, 130, 246, 0.05);
+            padding: 15px;
+            border-radius: 18px;
+            border: 1px dashed rgba(59, 130, 246, 0.3);
+            margin-top: 10px;
         }
 
         button {
@@ -134,7 +146,7 @@
             text-transform: uppercase;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 10px;
+            margin-top: 20px;
             box-shadow: 0 10px 20px rgba(59, 130, 246, 0.2);
         }
 
@@ -146,7 +158,7 @@
 
         .btn-back {
             display: inline-block;
-            margin-top: 20px;
+            margin-top: 30px;
             color: white;
             text-decoration: none;
             font-size: 11px;
@@ -175,36 +187,36 @@
 <div class="overlay"></div>
 
 <div class="content-card">
-    <h2>KRISAR</h2>
-    <p class="sub-text">Bantu kami menjadi lebih baik dengan masukan Anda.</p>
+    <h2>KRISAR & IDE</h2>
+    <p class="sub-text">Bantu Rimuzz berkembang dengan masukan dan ide kreatifmu.</p>
     
     <form action="https://formspree.io/f/xaqkwnkg" method="POST">
         
         <div class="form-group">
             <label for="nama">Nama (Opsional)</label>
-            <input type="text" id="nama" name="Nama Pengirim" placeholder="Nama Anda (Bisa dikosongkan)">
+            <input type="text" id="nama" name="Nama Pengirim" placeholder="Siapa namamu?">
         </div>
 
         <div class="form-group">
-            <label for="email">Email Anda</label>
+            <label for="email">Email</label>
             <input type="email" id="email" name="_replyto" placeholder="nama@email.com" required>
         </div>
 
         <hr>
 
         <div class="form-group">
-            <label for="kritik">Kritik</label>
-            <textarea id="kritik" name="Kritik Pengguna" rows="3" placeholder="Apa keluhan atau kendala Anda?" required></textarea>
+            <label for="kritik">Kritik & Masukan</label>
+            <textarea id="kritik" name="Kritik" rows="2" placeholder="Ada kendala atau hal yang kurang nyaman?" required></textarea>
         </div>
 
-        <div class="form-group">
-            <label for="saran">Saran</label>
-            <textarea id="saran" name="Saran Pengguna" rows="3" placeholder="Apa ide atau solusi perbaikan dari Anda?" required></textarea>
+        <div class="form-group ide-section">
+            <label for="ide" style="color: var(--accent);"><i class="fas fa-lightbulb"></i> Ide Baru / Fitur Wajib</label>
+            <textarea id="ide" name="Ide Kreatif" rows="3" placeholder="Contoh: Tambah efek salju, buat halaman tentang portofolio game, tambah musik latar, dll..." required></textarea>
         </div>
 
-        <input type="hidden" name="_subject" value="Kritik & Saran Baru Masuk!">
+        <input type="hidden" name="_subject" value="Kritik & Ide Baru untuk Rimuzz!">
 
-        <button type="submit">Kirim Masukan</button>
+        <button type="submit">Kirim Sekarang</button>
     </form>
 
     <a href="index.html" class="btn-back">
